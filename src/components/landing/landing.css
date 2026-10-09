@@ -40,6 +40,43 @@ html:has(.lp) { scroll-behavior: smooth; }
 }
 .lp p { text-wrap: pretty; }
 
+/* Serif voice: the patient's own words and the page's emotional lines */
+.lp-serif {
+  font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
+}
+
+/* Hero "before": a phone note scrap behind the organized card */
+.lp-scrap {
+  background: #f6efdf;
+  box-shadow: 0 0 0 1px rgba(120, 100, 60, 0.12), 0 18px 36px -24px rgba(60, 45, 20, 0.45);
+}
+
+/* Visit summary: reads as a printed page */
+.lp-sheet {
+  box-shadow:
+    0 0 0 1px rgba(15, 30, 44, 0.08),
+    0 1px 2px rgba(15, 30, 44, 0.06),
+    8px 10px 0 -2px #f1ede5,
+    8px 10px 0 -1px rgba(15, 30, 44, 0.08),
+    0 30px 50px -30px rgba(15, 30, 44, 0.35);
+}
+
+/* Highlighted facts inside the story card */
+.lp-hl { background: none; color: inherit; padding: 0 0.1em; border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.lp-hl--warn { background: var(--warn-bg); }
+.lp-hl--brand { background: var(--sky-wash); }
+.lp-hl--urgent { background: var(--urgent-bg); }
+.lp-hl--ok { background: var(--ok-bg); }
+
+/* Hero card settles in once */
+.lp-rise { animation: lp-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both; }
+@keyframes lp-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
 /* Buttons */
 .lp-btn {
   display: inline-flex;
