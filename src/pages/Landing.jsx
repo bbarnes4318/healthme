@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowDown, Plus, Phone } from "lucide-react";
 import {
-  HeroPrep, ScatteredToCaptured, WholeWeek, BetterContext, NightChat, StoryHub, CaregiverMock, ReadyForVisit, Mark,
+  HeroPrep, ScatteredToCaptured, WholeWeek, BetterContext, IntakeFlow, NightChat, SignalsToBrief, CaregiverMock, ReadyForVisit, Mark,
 } from "@/components/landing/Demos";
 import { track } from "@/components/landing/track";
 import "@/components/landing/landing.css";
@@ -98,23 +98,23 @@ function Chips({ items, className = "" }) {
 function Hero({ ctaRef }) {
   return (
     <section aria-labelledby="hero-title" className={`relative overflow-hidden ${BG.paper}`}>
-      <div className={`${container} relative grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.85fr)] gap-12 lg:gap-8 items-center pt-6 sm:pt-12 lg:pt-2 pb-14 sm:pb-20 lg:pb-10 lg:min-h-[calc(100svh-64px)] lg:max-h-[860px]`}>
+      <div className={`${container} relative grid grid-cols-1 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)] gap-12 lg:gap-6 items-center pt-6 sm:pt-12 lg:pt-2 pb-14 sm:pb-20 lg:pb-10 lg:min-h-[calc(100svh-64px)] lg:max-h-[860px]`}>
         <div>
           <Eyebrow>Better prepared for your next appointment</Eyebrow>
-          <h1 id="hero-title" className="lp-display mt-3 max-w-[760px] font-bold text-[2.75rem] leading-[1] sm:text-[4rem] lg:text-[4.125rem] xl:text-[4.75rem] tracking-[-0.045em]">
-            Your doctor only knows what makes it into the&nbsp;room.
+          <h1 id="hero-title" className="lp-display mt-3 max-w-[640px] font-extrabold text-[2.875rem] leading-[0.98] sm:text-[4.25rem] lg:text-[4.25rem] xl:text-[4.625rem] tracking-[-0.05em]">
+            Your doctor only knows what makes it <span className="text-[color:var(--brand)]">into the&nbsp;room.</span>
           </h1>
-          <ul className="lp-serif italic mt-5 text-[1.1875rem] sm:text-[1.3125rem] leading-[1.35] text-[color:var(--ink)]">
+          <ul className="lp-serif italic mt-5 text-[1.1875rem] sm:text-[1.375rem] leading-[1.35] text-[color:var(--ink)]">
             <li>Symptoms you forgot.</li>
             <li>Questions you meant to ask.</li>
             <li>Medication changes you didn't think mattered.</li>
           </ul>
-          <p className="mt-4 max-w-[580px] text-[1.0625rem] sm:text-[1.125rem] leading-relaxed text-[color:var(--ink-2)]">
+          <p className="mt-4 max-w-[540px] text-[1.0625rem] sm:text-[1.125rem] leading-relaxed text-[color:var(--ink-2)]">
             Health Me helps you capture what's happening between visits and organize it before your next appointment —
             so you can walk in with a clearer picture of what has actually been going on.
           </p>
           <div ref={ctaRef} className="mt-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
-            <Cta src="hero" size="lp-btn--lg" className="w-full sm:w-auto" />
+            <Cta src="hero" size="lp-btn--lg lp-btn--xl" className="w-full sm:w-auto" />
             <a
               href="#how"
               onClick={() => track("landing_secondary_click", { location: "hero_how" })}
@@ -190,7 +190,7 @@ function TimelineSection() {
 
         <div className="mt-10 sm:mt-14"><WholeWeek /></div>
 
-        <p className="lp-display mt-10 sm:mt-14 font-bold text-[2rem] leading-[1.08] sm:text-[2.75rem] lg:text-[3.25rem] tracking-[-0.04em]">
+        <p className="lp-display mt-12 sm:mt-16 font-extrabold text-[2.25rem] leading-[1.02] sm:text-[3.25rem] lg:text-[4rem] tracking-[-0.045em]">
           <span className="block">Your doctor sees Tuesday.</span>
           <span className="block text-[color:var(--brand)]">Health Me helps you bring Monday through&nbsp;Monday.</span>
         </p>
@@ -204,21 +204,30 @@ function BeforeAfterSection() {
   return (
     <section aria-labelledby="context-title" className={`${section} ${BG.white}`}>
       <div className={container}>
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] rounded-[32px] overflow-hidden">
+        <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] rounded-[32px] overflow-hidden">
+          <span aria-hidden="true" className="hidden lg:grid absolute z-10 left-[45%] top-1/2 -translate-x-1/2 -translate-y-1/2 place-items-center w-16 h-16 rounded-full bg-[color:var(--brand)] text-white ring-[10px] ring-white">
+            <ArrowRight className="w-7 h-7" />
+          </span>
           <div className="relative bg-[#ece8e1] p-7 sm:p-12 flex flex-col min-h-[280px] lg:min-h-[520px]">
-            <p className="lp-eyebrow !text-[color:var(--muted)]">Without Health Me</p>
-            <p className="lp-serif italic my-auto pt-8 lg:pt-0 text-[2.75rem] sm:text-[3.75rem] lg:text-[4.25rem] leading-[1] text-[#6b6458]">
+            <p className="lp-eyebrow !text-[color:var(--muted)]">Without Health Me <span className="font-medium normal-case tracking-normal">· vague memory</span></p>
+            <p className="lp-serif italic my-auto py-8 lg:py-0 text-[2.75rem] sm:text-[3.75rem] lg:text-[4.5rem] leading-[1] text-[#6b6458]">
               &ldquo;I've just felt off lately.&rdquo;
             </p>
+            <ul aria-hidden="true" className="lp-serif italic space-y-1 text-[1.0625rem] sm:text-[1.1875rem] text-[#aaa293]">
+              <li>&hellip;started a week ago? Maybe two?</li>
+              <li>&hellip;I think something changed with my pills?</li>
+              <li>&hellip;not sure what my blood pressure was.</li>
+            </ul>
           </div>
-          <div className="bg-[color:var(--ink)] p-7 sm:p-12">
-            <p className="lp-eyebrow !text-sky-300 mb-5 flex items-center gap-2"><Mark className="w-5 h-5" /> With Health Me</p>
+          <div className="bg-[color:var(--ink)] p-7 sm:p-12 lg:pl-16">
+            <p className="lp-eyebrow !text-sky-300 mb-5 flex items-center gap-2 lg:pl-6"><Mark className="w-5 h-5" /> With Health Me <span className="font-medium normal-case tracking-normal text-white/60">· structured context</span></p>
             <BetterContext />
           </div>
         </div>
-        <div className="mt-10 sm:mt-14 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-5 lg:gap-16 items-end">
-          <h2 id="context-title" className="lp-display font-bold text-[2.75rem] leading-[1] sm:text-[4rem] lg:text-[4.5rem] tracking-[-0.045em]">
-            Same patient.<br /><span className="text-[color:var(--brand)]">Better context.</span>
+        <div className="mt-10 sm:mt-14 grid grid-cols-1 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,0.75fr)] gap-5 lg:gap-12 items-end">
+          <h2 id="context-title" className="lp-display font-extrabold text-[3rem] leading-[0.98] sm:text-[4.5rem] lg:text-[5.5rem] tracking-[-0.05em]">
+            <span className="block sm:whitespace-nowrap">Same patient.</span>
+            <span className="block sm:whitespace-nowrap text-[color:var(--brand)]">Better context.</span>
           </h2>
           <p className={`${body} lg:pb-2`}>
             Health Me doesn't diagnose for your doctor. It helps you walk into the conversation with more of the
@@ -230,15 +239,7 @@ function BeforeAfterSection() {
   );
 }
 
-/* 5. Visit preparation, in five short steps */
-const PREP = [
-  ["Symptoms", ["What, when, how bad", "Better or worse?"], "Headaches since Oct 5. Dizzy when standing."],
-  ["Concerns", ["What worries you", "What needs an answer"], "Is the higher dose agreeing with me?"],
-  ["Medications", ["What, how much, when", "What changed"], "Lisinopril 10 → 20 mg on Oct 6."],
-  ["History", ["Conditions, records", "Labs, vitals"], "High blood pressure since 2021."],
-  ["Patterns", ["What changed over time"], "Worse in the evenings."],
-];
-
+/* 5. Guided intake */
 function PrepSection() {
   return (
     <section id="how" aria-labelledby="how-title" className={`${section} ${BG.warm}`}>
@@ -246,22 +247,9 @@ function PrepSection() {
         <Eyebrow>Before the appointment</Eyebrow>
         <h2 id="how-title" className={`${h2} mt-3 max-w-[900px]`}>Turn &ldquo;something feels wrong&rdquo; into a conversation your doctor can actually use.</h2>
 
-        <ol className="mt-10 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          {PREP.map(([title, prompts, note], i) => (
-            <li key={title} className="flex flex-col rounded-[22px] bg-white p-5 shadow-[0_0_0_1px_var(--line)]">
-              <div className="flex items-center gap-3">
-                <span className="lp-display grid place-items-center w-8 h-8 rounded-full bg-[color:var(--brand)] text-white text-[0.875rem] font-bold shrink-0">{i + 1}</span>
-                <h3 className="lp-display text-[1.25rem] font-bold tracking-[-0.02em]">{title}</h3>
-              </div>
-              <ul className="mt-3 space-y-0.5 text-[0.9375rem] text-[color:var(--ink-2)]">
-                {prompts.map((p) => <li key={p}>{p}</li>)}
-              </ul>
-              <p className="lp-serif mt-4 pt-3 border-t border-[color:var(--line)] text-[1.0625rem] leading-snug text-[color:var(--ink)]">{note}</p>
-            </li>
-          ))}
-        </ol>
+        <div className="mt-10 sm:mt-14"><IntakeFlow /></div>
 
-        <p className="lp-display mt-12 sm:mt-16 max-w-[1000px] text-[1.75rem] sm:text-[2.25rem] lg:text-[2.75rem] leading-[1.12] font-bold tracking-[-0.035em]">
+        <p className="lp-display mt-12 sm:mt-16 pt-10 sm:pt-14 border-t-2 border-[color:var(--ink)] max-w-[1100px] text-[1.875rem] sm:text-[2.5rem] lg:text-[3.125rem] leading-[1.08] font-extrabold tracking-[-0.04em]">
           <span className="block text-[color:var(--muted)]">The goal isn't to tell your doctor what the diagnosis&nbsp;is.</span>
           <span className="block">The goal is to make sure your doctor has a better picture of&nbsp;you.</span>
         </p>
@@ -335,7 +323,7 @@ function BrandStatement() {
   );
 }
 
-/* 8. Features as one connected story */
+/* 8. Many signals → one visit brief */
 function FeaturesSection() {
   return (
     <section id="features" aria-labelledby="features-title" className={`${section} ${BG.warm}`}>
@@ -345,9 +333,11 @@ function FeaturesSection() {
             <Eyebrow>One place to build the story</Eyebrow>
             <h2 id="features-title" className={`${h2} mt-3`}>Everything your next health conversation may depend on.</h2>
           </div>
-          <p className={body}>Each piece is useful on its own. Together, they become one story you can bring to the appointment.</p>
+          <p className="lp-display text-[1.375rem] sm:text-[1.5rem] leading-snug font-semibold tracking-[-0.02em] text-[color:var(--ink)]">
+            Different pieces of your health. One clearer story for the appointment.
+          </p>
         </div>
-        <div className="mt-10 sm:mt-12"><StoryHub /></div>
+        <div className="mt-10 sm:mt-14"><SignalsToBrief /></div>
       </div>
     </section>
   );

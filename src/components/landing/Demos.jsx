@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Mic, ArrowUp, ArrowRight, Pill, Check, CalendarDays, Activity, Download, Link2, Moon, Stethoscope,
-  TrendingDown, HeartPulse, CircleHelp, ShieldAlert, FlaskConical, MessageCircle, FolderOpen, LineChart, Users,
-  ClipboardCheck,
+  TrendingDown, HeartPulse, CircleHelp, ShieldAlert, FlaskConical, FolderOpen, LineChart, Users, ClipboardCheck,
 } from "lucide-react";
 
 // Product UI mockups for the public landing page. One illustrative patient (Jordan) runs through all of them
@@ -68,16 +67,16 @@ function Typing() {
   );
 }
 
-/* ---------------- Hero: scattered notes behind an organized visit prep ---------------- */
+/* ---------------- Hero: scattered notes become an organized visit prep ---------------- */
 
 const SPARK = [128, 131, 129, 138, 141, 146, 139, 133];
 
-function Spark() {
+function Spark({ className = "w-full h-7 mt-1" }) {
   const w = 120, h = 26, min = 124, max = 148;
   const pts = SPARK.map((v, i) => [(i * w) / (SPARK.length - 1), h - ((v - min) / (max - min)) * h]);
   const d = pts.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
   return (
-    <svg viewBox={`-3 -4 ${w + 6} ${h + 8}`} className="w-full h-7 mt-1" aria-hidden="true">
+    <svg viewBox={`-3 -4 ${w + 6} ${h + 8}`} className={className} aria-hidden="true">
       <path d={d} fill="none" stroke="#0369a1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       {[3, 4, 5, 6].map((i) => <circle key={i} cx={pts[i][0]} cy={pts[i][1]} r="3" fill="#b42318" />)}
     </svg>
@@ -93,87 +92,96 @@ function PrepBlock({ title, children, className = "" }) {
   );
 }
 
-// The week, as six dots leading up to the visit.
+// The eight days before the visit, as dots: headache, dose change, dizziness, high reading, better, questions.
 const HERO_DAYS = [["M", "symptom"], ["T", "med"], ["T", "symptom"], ["S", "vital"], ["S", "better"], ["M", "question"]];
+
+function MiniTimeline() {
+  return (
+    <div className="relative flex items-start gap-1.5 mt-1.5" aria-label="Headache, dose change, dizziness, high reading, improving, questions ready, then the visit">
+      <span aria-hidden="true" className="absolute left-3 right-3 top-[6px] h-px bg-[#d5d0c6]" />
+      {HERO_DAYS.map(([d, k], i) => (
+        <span key={i} className="relative flex flex-col items-center gap-1 flex-1">
+          <span className={`w-3 h-3 rounded-full ring-[3px] ring-white ${KINDS[k].dot}`} />
+          <span className="text-[0.625rem] font-semibold text-[color:var(--muted)]">{d}</span>
+        </span>
+      ))}
+      <span className="relative flex flex-col items-center gap-1 flex-1">
+        <Stethoscope className="w-3.5 h-3.5 -mt-px bg-white text-[color:var(--ink)]" aria-hidden="true" />
+        <span className="text-[0.625rem] font-semibold text-[color:var(--ink)]">Visit</span>
+      </span>
+    </div>
+  );
+}
 
 export function HeroPrep() {
   return (
-    <div className="relative w-full max-w-[500px] mx-auto lg:mr-0 xl:pt-8">
-      {/* Before: the note on your phone */}
-      <div
-        aria-hidden="true"
-        className="lp-scrap hidden xl:block absolute -left-10 top-0 w-[200px] -rotate-[4deg] rounded-2xl px-4 pt-4 pb-6"
-      >
-        <p className="text-[0.625rem] font-semibold uppercase tracking-wider text-[#8a7f6a]">Notes · tell dr</p>
+    <div className="relative w-full max-w-[390px] mx-auto lg:mr-0">
+      {/* Before: the note on your phone, tucked behind the card's left edge */}
+      <div aria-hidden="true" className="lp-scrap hidden xl:block absolute right-[calc(100%-22px)] top-[190px] w-[188px] -rotate-[5deg] rounded-2xl px-4 pt-3.5 pb-5">
+        <p className="text-[0.625rem] font-semibold uppercase tracking-wider text-[#8a7f6a]">Before · phone notes</p>
         <ul className="lp-serif mt-2 space-y-1 text-[0.9375rem] leading-snug text-[#5b5344]">
           <li>headaches since…?</li>
           <li>before or after new dose??</li>
           <li>dizzy thurs</li>
           <li className="line-through decoration-[#b9ad95]">10mg or 20?</li>
           <li>BP high one day</li>
+          <li>ask about ???</li>
         </ul>
       </div>
+      <span aria-hidden="true" className="hidden xl:grid absolute left-0 top-[270px] -translate-x-1/2 z-20 place-items-center w-9 h-9 rounded-full bg-[color:var(--brand)] text-white ring-4 ring-[color:var(--paper)]">
+        <ArrowRight className="w-4 h-4" />
+      </span>
 
       {/* After: the organized visit prep */}
-      <figure className="lp-card lp-rise relative w-full max-w-[390px] ml-auto overflow-hidden" aria-label="Example Health Me visit preparation for an upcoming appointment">
-        <div className="flex items-center justify-between gap-3 px-4 sm:px-5 pt-4 pb-3">
+      <figure className="lp-card lp-rise relative w-full overflow-hidden" aria-label="Example Health Me visit preparation for an upcoming appointment">
+        <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 bg-[color:var(--ink)] text-white">
           <div className="flex items-center gap-2.5 min-w-0">
-            <span className="grid place-items-center w-9 h-9 rounded-xl bg-[color:var(--sky-wash)] text-[color:var(--brand)] shrink-0">
-              <CalendarDays className="w-4 h-4" aria-hidden="true" />
-            </span>
+            <CalendarDays className="w-4 h-4 text-sky-300 shrink-0" aria-hidden="true" />
             <div className="min-w-0">
               <p className="font-semibold text-[0.9375rem] leading-tight truncate">Visit prep · Dr. Patel</p>
-              <p className="text-xs text-[color:var(--muted)]">Tue, Oct 13 · 10:30 AM</p>
+              <p className="text-xs text-white/70">Tue, Oct 13 · 10:30 AM</p>
             </div>
           </div>
-          <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-[color:var(--ok-bg)] text-[color:var(--ok)] text-xs font-semibold px-2.5 py-1">
+          <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-emerald-400/15 text-emerald-300 text-xs font-semibold px-2.5 py-1">
             <Check className="w-3.5 h-3.5" aria-hidden="true" /> Ready
           </span>
         </div>
 
-        <div className="px-4 sm:px-5 pb-4">
-          <PrepBlock title="Main concern">
-            <p className="text-[0.9375rem] font-medium leading-snug">Headaches, and now dizziness when standing</p>
-            <p className="text-[0.8125rem] text-[color:var(--muted)] mt-0.5">Since Mon, Oct 5 · usually worse in the evening</p>
+        <div className="px-4 sm:px-5 pb-3.5 pt-1">
+          <PrepBlock title="Main concern" className="!border-0">
+            <p className="text-[1rem] font-semibold leading-snug">Recurring headaches and dizziness</p>
           </PrepBlock>
-          <PrepBlock title="Timeline · last 8 days">
-            <div className="relative flex items-start gap-1.5 mt-1.5" aria-label="Headache, dose change, dizziness, high reading, improving, questions ready, then the visit">
-              <span aria-hidden="true" className="absolute left-3 right-3 top-[6px] h-px bg-[#d5d0c6]" />
-              {HERO_DAYS.map(([d, k], i) => (
-                <span key={i} className="relative flex flex-col items-center gap-1 flex-1">
-                  <span className={`w-3 h-3 rounded-full ring-[3px] ring-white ${KINDS[k].dot}`} />
-                  <span className="text-[0.625rem] font-semibold text-[color:var(--muted)]">{d}</span>
-                </span>
-              ))}
-              <span className="relative flex flex-col items-center gap-1 flex-1">
-                <Stethoscope className="w-3.5 h-3.5 -mt-px bg-white text-[color:var(--ink)]" aria-hidden="true" />
-                <span className="text-[0.625rem] font-semibold text-[color:var(--ink)]">Visit</span>
-              </span>
+          <div className="grid grid-cols-2 gap-4 border-t border-[color:var(--line)] py-2.5 text-[0.8125rem] leading-[1.45]">
+            <div>
+              <p className={label}>Symptoms</p>
+              <p className="mt-1">Headache, up to 6/10</p>
+              <p>Dizzy when standing</p>
             </div>
-          </PrepBlock>
-          <PrepBlock title="What changed?">
-            <p className="text-[0.9375rem] leading-snug">Lisinopril increased from 10 mg to 20 mg on Oct 6</p>
-          </PrepBlock>
-          <div className="grid grid-cols-2 gap-4 border-t border-[color:var(--line)]">
-            <div className="py-2.5">
-              <p className={label}>Medications</p>
-              <ul className="mt-1 text-[0.8125rem] leading-[1.45]">
-                <li>Lisinopril 20 mg</li>
-                <li>Atorvastatin 20 mg</li>
-                <li className="text-[color:var(--muted)]">Ibuprofen, as needed</li>
-              </ul>
-            </div>
-            <div className="py-2.5 min-w-0">
-              <p className={label}>Recent vitals</p>
-              <p className="mt-1 text-[0.8125rem]"><span className="font-semibold text-[color:var(--urgent)]">4 BP readings</span> <span className="text-[color:var(--muted)]">above usual</span></p>
-              <Spark />
+            <div>
+              <p className={label}>Started</p>
+              <p className="mt-1">Mon, Oct 5</p>
+              <p>Thu, Oct 8</p>
             </div>
           </div>
-          <PrepBlock title="What do I want to ask?">
-            <ul className="space-y-1.5 mt-1">
-              {["Could the dose change be related to the dizziness?", "Should I check my blood pressure more often?"].map((q) => (
-                <li key={q} className="flex gap-2 text-[0.875rem] leading-snug">
-                  <span className="mt-[3px] w-3.5 h-3.5 rounded-[4px] border-[1.5px] border-[color:var(--brand)] shrink-0" aria-hidden="true" />
+          <PrepBlock title="Recent events"><MiniTimeline /></PrepBlock>
+          <PrepBlock title="What changed">
+            <p className="flex items-center gap-2 text-[0.875rem]">
+              <Pill className="w-4 h-4 text-[color:var(--brand)] shrink-0" aria-hidden="true" />
+              <span><span className="font-semibold">Lisinopril 10 → 20 mg</span> <span className="text-[color:var(--muted)]">on Oct 6</span></span>
+            </p>
+          </PrepBlock>
+          <div className="grid grid-cols-[minmax(0,1fr)_110px] gap-3 items-center border-t border-[color:var(--line)] py-2.5">
+            <div>
+              <p className={label}>Recent vitals</p>
+              <p className="mt-1 text-[0.8125rem]"><span className="font-semibold text-[color:var(--urgent)]">4 BP readings</span> above usual</p>
+            </div>
+            <Spark className="w-full h-8" />
+          </div>
+          <PrepBlock title="Questions for Dr. Patel">
+            <ul className="space-y-1 mt-0.5">
+              {["Could the dose change be related?", "Should I check my blood pressure more often?"].map((q) => (
+                <li key={q} className="flex gap-2 text-[0.8125rem] leading-snug">
+                  <span className="mt-[2px] w-3.5 h-3.5 rounded-[4px] border-[1.5px] border-[color:var(--brand)] shrink-0" aria-hidden="true" />
                   {q}
                 </li>
               ))}
@@ -239,72 +247,61 @@ export function ScatteredToCaptured() {
 
 const DAYS = [
   { day: "Monday", date: "Oct 5", kind: "symptom", title: "Headache begins", meta: "6/10, behind the eyes" },
-  { day: "Tuesday", date: "Oct 6", kind: "med", title: "Medication changes", meta: "Lisinopril 10 → 20 mg" },
+  { day: "Tuesday", date: "Oct 6", kind: "med", title: "Medication changed", meta: "Lisinopril 10 → 20 mg" },
   { day: "Thursday", date: "Oct 8", kind: "symptom", title: "Dizziness appears", meta: "When standing up" },
-  { day: "Saturday", date: "Oct 10", kind: "vital", title: "Blood pressure up", meta: "146/94, higher than usual" },
+  { day: "Saturday", date: "Oct 10", kind: "vital", title: "Blood pressure elevated", meta: "146/94 at 8:30 PM" },
   { day: "Sunday", date: "Oct 11", kind: "better", title: "Symptoms improve", meta: "Headache down to 2/10" },
   { day: "Monday", date: "Oct 12", kind: "question", title: "Questions ready", meta: "Two saved for Dr. Patel" },
 ];
-const VISIT = { day: "Next Tuesday", date: "Oct 13", kind: "visit", title: "Doctor appointment", meta: "Dr. Patel · 10:30 AM" };
-
-function TimelineNode({ e, visit = false }) {
-  const k = KINDS[e.kind];
-  return (
-    <li className={`relative flex lg:flex-col items-start gap-4 lg:gap-0 py-3 lg:py-0 ${visit ? "lg:pl-6" : "lg:pr-3"}`}>
-      <span className={`relative z-10 grid place-items-center w-12 h-12 lg:w-14 lg:h-14 rounded-2xl shrink-0 ring-[6px] ring-white ${k.tint}`}>
-        <k.icon className="w-5 h-5 lg:w-6 lg:h-6" aria-hidden="true" />
-      </span>
-      <div className="lg:mt-5 min-w-0">
-        <p className={`text-[0.75rem] font-bold uppercase tracking-[0.1em] ${visit ? "text-[color:var(--ink)]" : "text-[color:var(--brand)]"}`}>
-          {e.day} <span className="font-medium normal-case tracking-normal text-[color:var(--muted)]">· {e.date}</span>
-        </p>
-        <p className="lp-display mt-1 text-[1.125rem] lg:text-[1.1875rem] leading-snug font-semibold tracking-[-0.02em]">{e.title}</p>
-        <p className="mt-0.5 text-[0.9375rem] leading-snug text-[color:var(--ink-2)]">{e.meta}</p>
-      </div>
-    </li>
-  );
-}
 
 export function WholeWeek() {
   return (
-    <figure className="lp-card overflow-hidden" aria-label="Jordan's health timeline: eight days of events before a Tuesday appointment">
-      <div className="flex flex-wrap items-center justify-between gap-3 px-5 sm:px-7 py-4 border-b border-[color:var(--line)]">
-        <p className="flex items-center gap-2.5 font-semibold">
-          <Mark className="w-7 h-7" /> Jordan's health timeline
-          <span className="hidden sm:inline font-normal text-[color:var(--muted)]">· Oct 5 – Oct 13</span>
-        </p>
-        <div className="hidden sm:flex gap-1.5" aria-hidden="true">
-          {[["symptom", "Symptoms"], ["med", "Medications"], ["vital", "Vitals"], ["question", "Questions"]].map(([k, t]) => (
-            <span key={k} className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--line)] px-3 py-1 text-[0.8125rem] text-[color:var(--ink-2)]">
-              <span className={`w-2 h-2 rounded-full ${KINDS[k].dot}`} />{t}
-            </span>
-          ))}
+    <figure className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_236px] gap-3 xl:gap-4" aria-label="Eight days of health events, then one Tuesday appointment">
+      <div className="lp-card overflow-hidden">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-5 sm:px-7 py-4 border-b border-[color:var(--line)]">
+          <p className="flex items-center gap-2.5 font-semibold">
+            <Mark className="w-7 h-7" /> Jordan's health timeline
+          </p>
+          <p className="text-[0.9375rem] font-semibold text-[color:var(--brand)]">What you lived · Monday through Monday</p>
         </div>
+        <ol className="relative grid grid-cols-1 xl:grid-cols-6 px-5 sm:px-7 pt-5 xl:pt-8 pb-6 xl:pb-9">
+          <span aria-hidden="true" className="hidden xl:block absolute left-12 right-7 top-[64px] h-[3px] rounded-full bg-[color:var(--sky-wash)]" />
+          <span aria-hidden="true" className="xl:hidden absolute left-[45px] top-8 bottom-8 w-[3px] rounded-full bg-[color:var(--sky-wash)]" />
+          {DAYS.map((e) => {
+            const k = KINDS[e.kind];
+            return (
+              <li key={e.date} className="relative flex xl:flex-col items-start gap-4 xl:gap-0 py-2.5 xl:py-0 xl:pr-3">
+                <span className={`relative z-10 grid place-items-center w-12 h-12 xl:w-16 xl:h-16 rounded-2xl shrink-0 ring-[6px] ring-white ${k.tint}`}>
+                  <k.icon className="w-5 h-5 xl:w-7 xl:h-7" aria-hidden="true" />
+                </span>
+                <div className="xl:mt-5 min-w-0">
+                  <p className="text-[0.75rem] xl:text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-[color:var(--brand)]">
+                    {e.day} <span className="xl:block font-medium normal-case tracking-normal text-[color:var(--muted)]"><span className="xl:hidden">· </span>{e.date}</span>
+                  </p>
+                  <p className="lp-display mt-1 text-[1.1875rem] xl:text-[1.375rem] leading-[1.15] font-bold tracking-[-0.025em]">{e.title}</p>
+                  <p className="mt-1 text-[0.9375rem] leading-snug text-[color:var(--ink-2)]">{e.meta}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
       </div>
 
-      <div className="px-5 sm:px-7 pt-5 lg:pt-6 pb-6 lg:pb-8">
-        {/* Who sees what */}
-        <div className="hidden lg:grid grid-cols-[6fr_1.25fr] gap-0 mb-6 text-[0.875rem] font-semibold">
-          <p className="flex items-center gap-2 rounded-l-full bg-[color:var(--sky-wash)] text-[color:var(--brand)] px-4 py-2">
-            <Mark className="w-4 h-4" /> Health Me helps you bring Monday through Monday
-          </p>
-          <p className="rounded-r-full bg-[color:var(--ink)] text-white px-3 py-2 text-center whitespace-nowrap">Doctor sees Tuesday</p>
-        </div>
-        <p className="lg:hidden mb-2 flex items-center gap-2 text-[0.875rem] font-semibold text-[color:var(--brand)]">
-          <Mark className="w-4 h-4" /> What you bring: Monday through Monday
-        </p>
-
-        <div className="grid grid-cols-1 lg:grid-cols-[6fr_1.25fr]">
-          <ol className="relative grid grid-cols-1 lg:grid-cols-6">
-            <span aria-hidden="true" className="hidden lg:block absolute left-7 right-0 top-7 h-[2px] bg-[color:var(--sky-wash)]" />
-            <span aria-hidden="true" className="lg:hidden absolute left-6 top-6 bottom-6 w-[2px] bg-[color:var(--sky-wash)]" />
-            {DAYS.map((e) => <TimelineNode key={e.date} e={e} />)}
-          </ol>
-          <div className="mt-4 lg:mt-0 rounded-2xl lg:rounded-none bg-[color:var(--paper-2)] lg:bg-transparent px-3 lg:px-0 lg:border-l-2 lg:border-dashed lg:border-[color:var(--line)]">
-            <p className="lg:hidden pt-3 text-[0.875rem] font-semibold">What your doctor sees</p>
-            <ol><TimelineNode e={VISIT} visit /></ol>
+      <div className="rounded-[24px] bg-[color:var(--ink)] text-white p-6 xl:p-7 flex flex-col shadow-[0_24px_48px_-20px_rgba(15,30,44,0.55)]">
+        <p className="text-[0.9375rem] font-semibold text-sky-300">What the doctor sees</p>
+        <div className="flex xl:flex-col items-start gap-4 xl:gap-0 mt-5 xl:mt-auto">
+          <span className="grid place-items-center w-12 h-12 xl:w-16 xl:h-16 rounded-2xl bg-white text-[color:var(--ink)] shrink-0">
+            <Stethoscope className="w-5 h-5 xl:w-7 xl:h-7" aria-hidden="true" />
+          </span>
+          <div className="xl:mt-5">
+            <p className="text-[0.75rem] xl:text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-white/70">Next Tuesday <span className="xl:block font-medium normal-case tracking-normal"><span className="xl:hidden">· </span>Oct 13</span></p>
+            <p className="lp-display mt-1 text-[1.375rem] xl:text-[1.625rem] leading-[1.1] font-bold tracking-[-0.025em]">Doctor appointment</p>
+            <p className="mt-1 text-[0.9375rem] text-white/70">Dr. Patel · 10:30 AM</p>
           </div>
         </div>
+        <p className="mt-5 pt-4 border-t border-white/15 text-[0.9375rem] leading-snug text-white/80">
+          One appointment. Everything before it is yours to bring.
+        </p>
       </div>
     </figure>
   );
@@ -315,8 +312,8 @@ export function WholeWeek() {
 const SUMMARY = [
   ["Main concern", "Recurring dizziness and headaches"],
   ["Started", "Monday, October 5"],
-  ["Pattern", "Mostly worse in the evening"],
-  ["Medication change", "Lisinopril raised from 10 to 20 mg on October 6"],
+  ["Pattern", "Mostly worse in evenings"],
+  ["Recent change", "Lisinopril raised from 10 to 20 mg on October 6"],
   ["Vitals", "Four elevated blood pressure readings"],
 ];
 
@@ -327,7 +324,7 @@ export function BetterContext() {
         {SUMMARY.map(([k, v]) => (
           <div key={k} className="grid grid-cols-[7.5rem_minmax(0,1fr)] sm:grid-cols-[10rem_minmax(0,1fr)] gap-3 py-3 border-b border-white/15">
             <dt className="text-[0.75rem] font-semibold uppercase tracking-wider text-white/55 pt-0.5">{k}</dt>
-            <dd className="text-[1rem] sm:text-[1.0625rem] leading-snug text-white">{v}</dd>
+            <dd className="text-[1.0625rem] sm:text-[1.1875rem] leading-snug font-medium text-white">{v}</dd>
           </div>
         ))}
       </dl>
@@ -395,45 +392,162 @@ export function NightChat() {
   );
 }
 
-/* ---------------- Everything feeds one story ---------------- */
+/* ---------------- Guided intake: one concern, five stages, one brief ---------------- */
 
-const SOURCES = [
-  [MessageCircle, "AI-guided conversations", "Think questions through while they're fresh."],
-  [Activity, "Symptom tracking", "Record it when it happens."],
-  [Pill, "Medications", "Doses, schedules and recent changes."],
-  [FolderOpen, "Medical records", "Documents and history, easier to find."],
-  [LineChart, "Labs & trends", "Supported results over time."],
-  [HeartPulse, "Vitals", "Readings that add context."],
-  [Users, "Family profiles", "A separate story for each person."],
+const INTAKE = [
+  ["Symptoms", "symptom", ["What are you feeling?", "When did it start?", "Has it changed?"], "Headaches since Mon, Oct 5, up to 6/10. Dizzy when standing since Thu, Oct 8."],
+  ["Concerns", "question", ["What are you worried about?", "What don't you want to forget?"], "Is the higher dose agreeing with me? Mention the ibuprofen."],
+  ["Medications", "med", ["What are you taking?", "Did anything recently change?"], "Lisinopril 20 mg, raised from 10 mg on Oct 6. Atorvastatin. Ibuprofen as needed."],
+  ["History", "lab", ["Relevant conditions, labs, records, vitals"], "High blood pressure since 2021. Cholesterol panel from March. 24 home readings."],
+  ["Patterns", "vital", ["What keeps happening?", "What changed over time?"], "Worse in the evenings. Four readings above usual since the dose change."],
 ];
 
-export function StoryHub() {
+export function IntakeFlow() {
   return (
-    <figure aria-label="Seven kinds of health information that come together in visit preparation">
-      <ul className="relative grid grid-cols-2 lg:grid-cols-7 gap-2.5 lg:gap-3">
-        {SOURCES.map(([Icon, t, d]) => (
-          <li key={t} className="relative rounded-2xl bg-white p-4 shadow-[0_0_0_1px_var(--line)] lg:after:absolute lg:after:left-1/2 lg:after:top-full lg:after:h-6 lg:after:w-[2px] lg:after:bg-[#c8dceb]">
-            <span className="grid place-items-center w-10 h-10 rounded-xl bg-[color:var(--sky-wash)] text-[color:var(--brand)]">
-              <Icon className="w-5 h-5" aria-hidden="true" />
-            </span>
-            <p className="lp-display mt-3 text-[1rem] font-semibold leading-tight tracking-[-0.02em]">{t}</p>
-            <p className="mt-1 text-[0.875rem] leading-snug text-[color:var(--ink-2)]">{d}</p>
-          </li>
-        ))}
-      </ul>
-      {/* Rail joining every source into the one output */}
-      <div aria-hidden="true" className="hidden lg:block relative h-12">
-        <span className="absolute left-[7.14%] right-[7.14%] top-6 h-[2px] bg-[#c8dceb]" />
-        <span className="absolute left-1/2 top-6 h-6 w-[2px] bg-[#c8dceb]" />
+    <figure aria-label="A vague concern answered in five stages, each filling the same visit brief">
+      <div className="lg:grid lg:grid-cols-[minmax(0,0.9fr)_56px_minmax(0,1.1fr)]">
+        <div className="mb-6 lg:mb-0 lg:pb-6 flex items-end">
+          <p className="lp-scrap lp-serif italic rounded-2xl rounded-bl-md px-5 py-3.5 text-[1.25rem] sm:text-[1.375rem] leading-snug text-[#5b5344] max-w-[420px]">
+            &ldquo;Something feels wrong, but I don't know how to explain it.&rdquo;
+          </p>
+        </div>
+        <span className="hidden lg:block" />
+        <div className="hidden lg:flex items-center justify-between gap-3 self-end rounded-t-[24px] bg-[color:var(--ink)] text-white px-6 py-4">
+          <p className="flex items-center gap-2.5 font-semibold"><Mark className="w-6 h-6" /> Jordan's visit brief</p>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 text-emerald-300 text-xs font-semibold px-2.5 py-1">
+            <Check className="w-3.5 h-3.5" aria-hidden="true" /> 5 of 5 complete
+          </span>
+        </div>
+
+        {INTAKE.map(([title, kind, prompts, note], i) => {
+          const k = KINDS[kind];
+          const last = i === INTAKE.length - 1;
+          return (
+            <React.Fragment key={title}>
+              <div className="relative flex gap-4 lg:py-5">
+                {!last && <span aria-hidden="true" className="hidden lg:block absolute left-[19px] top-[68px] -bottom-5 w-[2px] bg-[#d9d3c8]" />}
+                <span className={`lp-display grid place-items-center w-10 h-10 rounded-full text-[1rem] font-bold shrink-0 ${k.tint}`}>{i + 1}</span>
+                <div className="min-w-0 pt-1">
+                  <h3 className="lp-display text-[1.375rem] font-bold leading-tight tracking-[-0.025em]">{title}</h3>
+                  <ul className="mt-1.5 text-[0.9375rem] leading-snug text-[color:var(--ink-2)] space-y-0.5">
+                    {prompts.map((p) => <li key={p}>{p}</li>)}
+                  </ul>
+                </div>
+              </div>
+              <div className="hidden lg:flex items-center justify-center text-[color:var(--muted)]">
+                <ArrowRight className="w-5 h-5" aria-hidden="true" />
+              </div>
+              <div
+                className={`mt-3 mb-7 lg:m-0 bg-white px-5 lg:px-6 py-4 lg:py-5 rounded-2xl lg:rounded-none shadow-[0_0_0_1px_var(--line)] lg:shadow-none lg:border-x lg:border-b lg:border-[color:var(--line)] ${
+                  last ? "lg:rounded-b-[24px] lg:shadow-[0_24px_48px_-24px_rgba(15,30,44,0.3)]" : ""
+                }`}
+              >
+                <p className={`flex items-center gap-2 text-[0.75rem] font-bold uppercase tracking-[0.08em] ${k.tint.split(" ").find((c) => c.startsWith("text-"))}`}>
+                  <k.icon className="w-4 h-4" aria-hidden="true" /> {title}
+                </p>
+                <p className="lp-serif mt-1.5 text-[1.125rem] sm:text-[1.1875rem] leading-snug text-[color:var(--ink)]">{note}</p>
+              </div>
+            </React.Fragment>
+          );
+        })}
       </div>
-      <div aria-hidden="true" className="lg:hidden flex justify-center py-3"><ArrowRight className="w-5 h-5 rotate-90 text-[color:var(--brand)]" /></div>
-      <div className="mx-auto max-w-[760px] flex flex-col sm:flex-row sm:items-center gap-4 rounded-[24px] bg-[color:var(--ink)] text-white p-5 sm:p-6">
-        <span className="grid place-items-center w-12 h-12 rounded-2xl bg-[color:var(--brand)] shrink-0">
-          <ClipboardCheck className="w-6 h-6" aria-hidden="true" />
-        </span>
-        <div className="min-w-0">
-          <p className="lp-display text-[1.25rem] sm:text-[1.375rem] font-semibold tracking-[-0.02em]">Visit preparation</p>
-          <p className="mt-0.5 text-white/75 leading-snug">Symptoms, questions, history and tracked health information, together before the appointment starts.</p>
+    </figure>
+  );
+}
+
+/* ---------------- Many signals → one visit brief ---------------- */
+
+const SIGNALS = [
+  [Activity, "Symptoms", "2 logged this week", "symptom"],
+  [CircleHelp, "Questions", "2 saved for the visit", "question"],
+  [Pill, "Medications", "3 current · 1 changed", "med"],
+  [FlaskConical, "Labs", "Cholesterol panel, March", "lab"],
+  [HeartPulse, "Vitals", "24 blood pressure readings", "vital"],
+  [LineChart, "Health trends", "Evening readings rising", "med"],
+  [FolderOpen, "Records", "Uploaded documents", "lab"],
+  [Users, "Family & caregiver context", "A separate brief for each person", "better"],
+];
+const ROW = 56, GAP = 8;
+const RAIL_H = SIGNALS.length * ROW + (SIGNALS.length - 1) * GAP;
+
+function BriefRow({ title, children, className = "" }) {
+  return (
+    <div className={`py-3 border-t border-[color:var(--line)] ${className}`}>
+      <p className={label}>{title}</p>
+      <div className="mt-1">{children}</div>
+    </div>
+  );
+}
+
+export function SignalsToBrief() {
+  return (
+    <figure className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] gap-0 items-center" aria-label="Eight kinds of health information combined into one appointment brief">
+      <div className="flex items-center">
+        <ul className="flex-1 min-w-0 grid grid-cols-2 lg:grid-cols-1 gap-2">
+          {SIGNALS.map(([Icon, t, m, kind]) => (
+            <li key={t} className="flex items-center gap-3 rounded-xl bg-white px-3 py-2.5 lg:py-0 lg:h-14 shadow-[0_0_0_1px_var(--line)]">
+              <span className={`grid place-items-center w-9 h-9 rounded-lg shrink-0 ${KINDS[kind].tint}`}><Icon className="w-[18px] h-[18px]" aria-hidden="true" /></span>
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] font-semibold leading-tight">{t}</span>
+                <span className="block text-[0.8125rem] text-[color:var(--muted)] leading-snug lg:truncate">{m}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        {/* Every signal converges on the brief */}
+        <svg aria-hidden="true" viewBox={`0 0 80 ${RAIL_H}`} className="hidden lg:block w-20 shrink-0" style={{ height: RAIL_H }}>
+          {SIGNALS.map((_, i) => {
+            const y = ROW / 2 + i * (ROW + GAP);
+            return <path key={i} d={`M0 ${y} C40 ${y} 40 ${RAIL_H / 2} 80 ${RAIL_H / 2}`} fill="none" stroke="#b9d3e6" strokeWidth="2" />;
+          })}
+          <circle cx="76" cy={RAIL_H / 2} r="4" fill="#0369a1" />
+        </svg>
+      </div>
+      <div aria-hidden="true" className="lg:hidden flex justify-center py-4"><ArrowRight className="w-6 h-6 rotate-90 text-[color:var(--brand)]" /></div>
+
+      <div className="lp-card overflow-hidden">
+        <div className="flex items-center justify-between gap-3 px-5 sm:px-6 py-4 bg-[color:var(--ink)] text-white">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Mark className="w-7 h-7 shrink-0" />
+            <div className="min-w-0">
+              <p className="font-semibold leading-tight">Your next appointment brief</p>
+              <p className="text-[0.8125rem] text-white/70 truncate">Jordan Rivera · Dr. Patel · Tue, Oct 13</p>
+            </div>
+          </div>
+          <ClipboardCheck className="w-5 h-5 text-emerald-300 shrink-0" aria-hidden="true" />
+        </div>
+        <div className="px-5 sm:px-6 pb-4">
+          <BriefRow title="Main concern" className="!border-0">
+            <p className="lp-display text-[1.25rem] font-bold tracking-[-0.02em]">Recurring dizziness and headaches</p>
+          </BriefRow>
+          <div className="grid grid-cols-2 gap-4 border-t border-[color:var(--line)] py-3 text-[0.9375rem] leading-snug">
+            <div>
+              <p className={label}>What changed</p>
+              <p className="mt-1">Dizziness began two days after the dose change</p>
+            </div>
+            <div>
+              <p className={label}>Medication changes</p>
+              <p className="mt-1">Lisinopril 10 → 20 mg on Oct 6</p>
+            </div>
+          </div>
+          <BriefRow title="Symptom timeline"><MiniTimeline /></BriefRow>
+          <div className="grid grid-cols-[minmax(0,1fr)_120px] gap-3 items-center border-t border-[color:var(--line)] py-3">
+            <div>
+              <p className={label}>Recent measurements</p>
+              <p className="mt-1 text-[0.9375rem]"><span className="font-semibold text-[color:var(--urgent)]">4 blood pressure readings</span> above usual, highest 146/94</p>
+            </div>
+            <Spark className="w-full h-9" />
+          </div>
+          <BriefRow title="Questions to discuss">
+            <ul className="space-y-1.5 mt-0.5">
+              {["Could the symptoms be related to the medication change?", "Should I check my blood pressure more often at home?"].map((q) => (
+                <li key={q} className="flex gap-2 text-[0.9375rem] leading-snug">
+                  <span className="mt-[3px] w-4 h-4 rounded-[4px] border-[1.5px] border-[color:var(--brand)] shrink-0" aria-hidden="true" />
+                  {q}
+                </li>
+              ))}
+            </ul>
+          </BriefRow>
         </div>
       </div>
     </figure>
