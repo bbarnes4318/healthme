@@ -3,8 +3,8 @@
   "name": "Health Me Medical Center",
   "icons": [
     {
-      "src": "https://base44.com/logo_v2.svg",
-      "sizes": "192x192 512x512",
+      "src": "/favicon.svg",
+      "sizes": "any",
       "type": "image/svg+xml"
     }
   ],

@@ -9,6 +9,10 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
+import { track } from "@/components/landing/track";
+
+// Which landing CTA brought the visitor here, for funnel reporting.
+const signupSource = new URLSearchParams(window.location.search).get("src") || "direct";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -27,6 +31,7 @@ export default function Register() {
       return;
     }
     setLoading(true);
+    track("registration_start", { method: "email", source: signupSource });
     try {
       await base44.auth.register({ email, password });
       setShowOtp(true);
@@ -45,6 +50,7 @@ export default function Register() {
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
       }
+      track("registration_complete", { method: "email", source: signupSource });
       window.location.href = "/";
     } catch (err) {
       setError(err.message || "Invalid verification code");
@@ -67,6 +73,7 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
+    track("registration_start", { method: "google", source: signupSource });
     base44.auth.loginWithProvider("google", "/");
   };
 
