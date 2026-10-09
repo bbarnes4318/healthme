@@ -1,24 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Mic, ArrowUp, FileText, Link2, Phone, Activity, ShieldAlert, FolderOpen, Pill, Check, Clock, Bell } from "lucide-react";
-import { track } from "./track";
+import React, { useEffect, useState } from "react";
+import {
+  Mic, ArrowUp, FileText, Link2, Phone, Activity, ShieldAlert, Pill, Check, Clock, CalendarDays, FlaskConical, Download,
+} from "lucide-react";
 
-const NEXT_LABEL = {
-  home: "Treat at home",
-  doctor: "Call your doctor",
-  er: "Get emergency care",
-};
-
-export function NextStep({ level, children }) {
-  return (
-    <div className={`lp-next lp-next--${level}`}>
-      <div className="lp-next__label">
-        <span className="lp-next__dot" aria-hidden="true" />
-        Next step: {NEXT_LABEL[level]}
-      </div>
-      <p className="text-[color:var(--ink)]">{children}</p>
-    </div>
-  );
-}
+// Product UI mockups for the public landing page. Data shown is illustrative.
 
 export function Mark({ className = "w-8 h-8" }) {
   return (
@@ -34,13 +19,24 @@ function prefersReducedMotion() {
   return typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 }
 
-const userBubble = "bg-[color:var(--brand)] text-white rounded-[18px] rounded-br-md px-4 py-2.5 text-[0.9375rem] leading-snug max-w-[86%] ml-auto";
-const aiBubble = "bg-[color:var(--paper-2)] text-[color:var(--ink)] rounded-[18px] rounded-bl-md px-4 py-2.5 text-[0.9375rem] leading-snug max-w-[92%]";
+// Reveals steps 1..n on a timeline; everything is laid out up front so nothing shifts.
+function useReveal(timeline, total) {
+  const [shown, setShown] = useState(0);
+  const [typing, setTyping] = useState(false);
+  useEffect(() => {
+    if (prefersReducedMotion()) {
+      setShown(total);
+      return;
+    }
+    const ids = timeline.map(([t, s, ty]) => setTimeout(() => { setShown(s); setTyping(ty); }, t));
+    return () => ids.forEach(clearTimeout);
+  }, [timeline, total]);
+  return { on: (i) => String(shown >= i), typingAt: (i) => typing && shown === i - 1 };
+}
 
-/* ---------------- Hero: an AI doctor visit ---------------- */
-
-// [delay ms, messages shown, typing indicator on]
-const HERO_TIMELINE = [[400, 1, false], [1000, 1, true], [2300, 2, false], [3300, 3, false], [3900, 3, true], [5600, 4, false]];
+const userBubble = "bg-[color:var(--brand)] text-white rounded-[18px] rounded-br-md px-4 py-2.5 text-[0.9375rem] leading-snug max-w-[88%] ml-auto";
+const aiBubble = "bg-[color:var(--paper-2)] text-[color:var(--ink)] rounded-[18px] rounded-bl-md px-4 py-2.5 text-[0.9375rem] leading-snug max-w-[94%]";
+const label = "text-[0.6875rem] font-semibold uppercase tracking-wider text-[color:var(--muted)]";
 
 function Typing() {
   return (
@@ -50,42 +46,104 @@ function Typing() {
   );
 }
 
-export function HeroVisit() {
-  const [shown, setShown] = useState(0);
-  const [typing, setTyping] = useState(false);
+/* ---------------- Hero: the connected workspace ---------------- */
 
-  useEffect(() => {
-    if (prefersReducedMotion()) {
-      setShown(4);
-      return;
-    }
-    const ids = HERO_TIMELINE.map(([t, s, ty]) => setTimeout(() => { setShown(s); setTyping(ty); }, t));
-    return () => ids.forEach(clearTimeout);
-  }, []);
+const SPARK = [126, 131, 128, 133, 129, 127, 130, 126, 128];
 
-  const on = (i) => String(shown >= i);
-  const typingAt = (i) => typing && shown === i - 1;
-
+function Spark() {
+  const w = 120, h = 34, min = 120, max = 136;
+  const d = SPARK.map((v, i) => `${i ? "L" : "M"}${((i * w) / (SPARK.length - 1)).toFixed(1)},${(h - ((v - min) / (max - min)) * h).toFixed(1)}`).join(" ");
   return (
-    <figure className="lp-card w-full max-w-[480px] mx-auto overflow-hidden" aria-label="Example AI doctor visit">
+    <svg viewBox={`0 -2 ${w} ${h + 4}`} className="w-full h-9 mt-1" aria-hidden="true">
+      <path d={d} fill="none" stroke="#0369a1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function Tile({ icon: Icon, title, children }) {
+  return (
+    <div className="rounded-2xl border border-[color:var(--line)] p-3.5 min-w-0">
+      <p className="flex items-center gap-1.5 text-[0.75rem] font-semibold text-[color:var(--muted)]">
+        <Icon className="w-3.5 h-3.5" aria-hidden="true" /> {title}
+      </p>
+      <div className="mt-1.5">{children}</div>
+    </div>
+  );
+}
+
+const HERO_TIMELINE = [[700, 1, false], [1300, 1, true], [2800, 2, false]];
+
+export function HeroWorkspace() {
+  const { on, typingAt } = useReveal(HERO_TIMELINE, 2);
+  return (
+    <figure className="lp-card w-full max-w-[500px] mx-auto overflow-hidden" aria-label="Example Health Me workspace">
+      <div className="flex items-center justify-between gap-3 px-4 sm:px-5 py-3 border-b border-[color:var(--line)]">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="grid place-items-center w-8 h-8 rounded-full bg-[#e6f3fa] text-[#0369a1] text-xs font-semibold shrink-0">JR</span>
+          <div className="min-w-0">
+            <p className="font-semibold text-[0.9375rem] leading-tight truncate">Jordan Rivera</p>
+            <p className="text-xs text-[color:var(--muted)]">Your health profile</p>
+          </div>
+        </div>
+        <div className="flex -space-x-1.5 shrink-0" aria-hidden="true">
+          {[["M", "bg-[#fdecf3] text-[#a1345f]"], ["S", "bg-[#e7f5ec] text-[#146c43]"], ["L", "bg-[#efeafd] text-[#5b3fb0]"]].map(([i, t]) => (
+            <span key={i} className={`grid place-items-center w-7 h-7 rounded-full ring-2 ring-white text-[0.6875rem] font-semibold ${t}`}>{i}</span>
+          ))}
+        </div>
+      </div>
+
+      <div className="p-4 sm:p-5 grid grid-cols-2 gap-2.5">
+        <Tile icon={Pill} title="Medications">
+          <p className="font-semibold text-[0.9375rem]">2 of 3 taken today</p>
+          <p className="text-[0.75rem] text-[color:var(--warn)] mt-0.5">Atorvastatin refill in 5 days</p>
+        </Tile>
+        <Tile icon={Activity} title="Blood pressure">
+          <p className="font-semibold text-[0.9375rem]">128/82 <span className="font-normal text-[0.75rem] text-[color:var(--muted)]">avg, 30 days</span></p>
+          <Spark />
+        </Tile>
+        <Tile icon={FlaskConical} title="Latest lab">
+          <p className="font-semibold text-[0.9375rem] truncate">Cholesterol panel</p>
+          <p className="text-[0.75rem] mt-0.5"><span className="font-semibold text-[color:var(--warn)]">LDL 162</span> <span className="text-[color:var(--muted)]">· above range</span></p>
+        </Tile>
+        <Tile icon={CalendarDays} title="Next appointment">
+          <p className="font-semibold text-[0.9375rem] truncate">Dr. Patel</p>
+          <p className="text-[0.75rem] text-[color:var(--muted)] mt-0.5">Thu, Oct 15 · 10:30 AM</p>
+        </Tile>
+      </div>
+
+      <div className="px-4 sm:px-5 pb-4 space-y-2.5">
+        <p className={`lp-msg ${userBubble}`} data-on={on(1)}>Can I take ibuprofen with my blood pressure medication?</p>
+        <div className="relative">
+          {typingAt(2) && <Typing />}
+          <p className={`lp-msg ${aiBubble}`} data-on={on(2)}>
+            Because you take lisinopril, regular ibuprofen can raise your blood pressure and strain your kidneys.
+            Acetaminophen is often a better choice. Check with your pharmacist before using ibuprofen for more than a day or two.
+          </p>
+        </div>
+      </div>
+    </figure>
+  );
+}
+
+/* ---------------- AI-guided conversation ---------------- */
+
+const CHAT_TIMELINE = [[300, 1, false], [900, 1, true], [2200, 2, false], [3200, 3, false], [3800, 3, true], [5400, 4, false]];
+
+export function ChatMock() {
+  const { on, typingAt } = useReveal(CHAT_TIMELINE, 4);
+  return (
+    <figure className="lp-card w-full max-w-[480px] overflow-hidden" aria-label="Example AI-guided health conversation">
       <div className="flex items-center justify-between gap-3 px-5 py-3.5 border-b border-[color:var(--line)]">
         <div className="flex items-center gap-2.5">
           <Mark className="w-7 h-7" />
           <div>
-            <p className="font-semibold text-[0.9375rem] leading-tight">AI Doctor</p>
-            <p className="text-xs text-[color:var(--muted)]">Health Me</p>
+            <p className="font-semibold text-[0.9375rem] leading-tight">Health conversation</p>
+            <p className="text-xs text-[color:var(--muted)]">Using your medications and allergies</p>
           </div>
         </div>
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[color:var(--ok)]">
-          <span className="w-2 h-2 rounded-full bg-[color:var(--ok)]" aria-hidden="true" />
-          Available now
-        </span>
       </div>
-
       <div className="px-4 sm:px-5 pt-4 pb-3 space-y-2.5">
-        <p className={`lp-msg ${userBubble}`} data-on={on(1)}>
-          I've had a sore throat and a fever of 101 since yesterday.
-        </p>
+        <p className={`lp-msg ${userBubble}`} data-on={on(1)}>I've had a sore throat and a fever of 101 since yesterday.</p>
         <div className="relative">
           {typingAt(2) && <Typing />}
           <p className={`lp-msg ${aiBubble}`} data-on={on(2)}>
@@ -97,17 +155,19 @@ export function HeroVisit() {
           {typingAt(4) && <Typing />}
           <div className={`lp-msg ${aiBubble} !max-w-full space-y-2.5`} data-on={on(4)}>
             <p>
-              A sore throat and fever without a cough can be a sign of strep throat, which needs a quick test to
-              confirm. Go to the emergency room if you have trouble breathing or cannot swallow liquids.
+              A sore throat and fever without a cough can be a sign of strep throat, which needs a quick test to confirm.
+              Seek emergency care if you have trouble breathing or cannot swallow liquids.
             </p>
-            <NextStep level="doctor">See your doctor or an urgent care clinic today for a strep test.</NextStep>
+            <div className="lp-next lp-next--doctor">
+              <div className="lp-next__label"><span className="lp-next__dot" aria-hidden="true" />Suggested next step</div>
+              <p>See your doctor or an urgent care clinic today about a strep test.</p>
+            </div>
           </div>
         </div>
       </div>
-
       <div className="px-4 sm:px-5 pb-4" aria-hidden="true">
         <div className="flex items-center gap-2 rounded-full border border-[color:var(--line)] pl-4 pr-1.5 py-1.5 text-sm text-[color:var(--muted)]">
-          <span className="flex-1 truncate">Describe your symptoms…</span>
+          <span className="flex-1 min-w-0 truncate">Describe a symptom or ask a question…</span>
           <Mic className="w-4 h-4" />
           <span className="grid place-items-center w-8 h-8 rounded-full bg-[color:var(--ink)] text-white"><ArrowUp className="w-4 h-4" /></span>
         </div>
@@ -116,148 +176,7 @@ export function HeroVisit() {
   );
 }
 
-/* ---------------- Example visits ---------------- */
-
-const QUESTIONS = [
-  {
-    id: "headache",
-    q: "I've had a headache since this morning. Should I be worried?",
-    answer: "Most headaches like this are caused by tension, poor sleep or dehydration, and they usually improve within a few hours with rest, water and an over-the-counter pain reliever.",
-    watchTitle: "Call 911 if you notice any of the following:",
-    watch: [
-      "A sudden, severe headache that feels like the worst of your life",
-      "Fever with a stiff neck, confusion or a new rash",
-      "Weakness, numbness, slurred speech or changes in your vision",
-    ],
-    level: "home",
-    next: "Rest and drink fluids. Check in again if the headache has not improved by this evening.",
-  },
-  {
-    id: "meds",
-    q: "Can I take ibuprofen with my blood pressure medication?",
-    answer: "Because you take lisinopril, regular use of ibuprofen can raise your blood pressure, make your medication less effective and put strain on your kidneys. An occasional dose is usually safe for most people.",
-    watchTitle: "Good to know:",
-    watch: [
-      "Acetaminophen (Tylenol) is often a better choice for pain if you take blood pressure medication",
-      "Avoid taking ibuprofen every day for more than a few days without medical advice",
-    ],
-    level: "doctor",
-    next: "Ask your pharmacist or doctor before taking ibuprofen for more than a day or two.",
-  },
-  {
-    id: "labs",
-    q: "My LDL cholesterol came back at 162. What does that mean?",
-    answer: "An LDL level of 162 mg/dL is considered high (the high range is 160 to 189). It is not an emergency, but it is worth making a plan with your doctor, especially if you also have high blood pressure or a family history of heart disease.",
-    watchTitle: "What usually happens next:",
-    watch: [
-      "Your doctor will consider your overall risk of heart disease, not only this number",
-      "Changes to diet and exercise, and sometimes medication, can lower it",
-      "A repeat test in a few months will show whether those changes are working",
-    ],
-    level: "home",
-    next: "Discuss the result at your next checkup. Your visit report can be saved as a PDF for your doctor.",
-  },
-  {
-    id: "child",
-    q: "My daughter has a fever of 101.8 and a sore throat. What should I do?",
-    answer: "A fever and sore throat without a cough can be a sign of strep throat, which needs a quick test to confirm. A fever at this level is not dangerous on its own.",
-    watchTitle: "Get help right away if she:",
-    watch: [
-      "Has trouble breathing, is drooling or cannot swallow",
-      "Has a stiff neck or is very difficult to wake",
-      "Has not urinated in eight hours",
-    ],
-    level: "doctor",
-    next: "Call her pediatrician today and ask about a strep test.",
-  },
-];
-
-export function AskExplorer() {
-  const [active, setActive] = useState(QUESTIONS[0].id);
-  const tabRefs = useRef([]);
-  const panelRef = useRef(null);
-  const item = QUESTIONS.find((x) => x.id === active);
-
-  const select = (id) => {
-    setActive(id);
-    track("landing_demo_question", { question: id });
-  };
-
-  // On phones the answer sits below the list, so bring it into view on tap.
-  const onTap = (id) => {
-    select(id);
-    if (window.innerWidth < 1024) {
-      requestAnimationFrame(() => panelRef.current?.scrollIntoView({ block: "start", behavior: prefersReducedMotion() ? "auto" : "smooth" }));
-    }
-  };
-
-  const onKey = (e, i) => {
-    const dir = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
-    if (!dir) return;
-    e.preventDefault();
-    const n = (i + dir + QUESTIONS.length) % QUESTIONS.length;
-    tabRefs.current[n]?.focus();
-    select(QUESTIONS[n].id);
-  };
-
-  return (
-    <div className="grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-6 lg:gap-10 items-start">
-      <div role="tablist" aria-label="Example visits" aria-orientation="vertical" className="flex flex-col gap-1.5">
-        {QUESTIONS.map((x, i) => {
-          const selected = x.id === active;
-          return (
-            <button
-              key={x.id}
-              ref={(el) => (tabRefs.current[i] = el)}
-              role="tab"
-              id={`ask-tab-${x.id}`}
-              aria-selected={selected}
-              aria-controls="ask-panel"
-              tabIndex={selected ? 0 : -1}
-              onClick={() => onTap(x.id)}
-              onKeyDown={(e) => onKey(e, i)}
-              className={`text-left rounded-2xl px-5 py-4 min-h-[64px] text-[1.0625rem] sm:text-lg font-medium leading-snug transition-colors ${
-                selected
-                  ? "bg-[color:var(--surface)] text-[color:var(--ink)] shadow-[0_0_0_1px_rgba(15,30,44,0.07),0_8px_24px_-12px_rgba(15,30,44,0.25)]"
-                  : "text-[color:var(--ink-2)] hover:bg-white/60"
-              }`}
-            >
-              &ldquo;{x.q}&rdquo;
-            </button>
-          );
-        })}
-      </div>
-
-      <div
-        id="ask-panel"
-        ref={panelRef}
-        role="tabpanel"
-        aria-labelledby={`ask-tab-${item.id}`}
-        aria-live="polite"
-        className="lp-card p-5 sm:p-7 lg:min-h-[460px]"
-      >
-        <div key={item.id} className="lp-fade space-y-4">
-          <p className={`${userBubble} !max-w-[92%]`}>{item.q}</p>
-          <p className="text-[1.0625rem] leading-relaxed text-[color:var(--ink)]">{item.answer}</p>
-          <div>
-            <p className="text-sm font-semibold text-[color:var(--muted)] mb-1.5">{item.watchTitle}</p>
-            <ul className="space-y-1.5">
-              {item.watch.map((w) => (
-                <li key={w} className="flex gap-2.5 text-[0.9375rem] leading-snug text-[color:var(--ink-2)]">
-                  <span aria-hidden="true" className="mt-[0.45em] w-1.5 h-1.5 rounded-full bg-[color:var(--muted)] shrink-0" />
-                  {w}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <NextStep level={item.level}>{item.next}</NextStep>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ---------------- Health history tour ---------------- */
+/* ---------------- Shared row ---------------- */
 
 function Row({ icon: Icon, title, meta, right, done = false }) {
   return (
@@ -274,91 +193,111 @@ function Row({ icon: Icon, title, meta, right, done = false }) {
   );
 }
 
-function RecordsMock() {
-  return (
-    <div className="lp-card p-5 sm:p-6 w-full max-w-[440px]">
-      <p className="font-semibold mb-1">Medical records</p>
-      <Row icon={FileText} title="Cholesterol panel" meta="March 12 · Quest Diagnostics" right={<span className="text-xs font-semibold rounded-full px-2 py-0.5 bg-[color:var(--warn-bg)] text-[color:var(--warn)]">LDL high</span>} />
-      <Row icon={FileText} title="Urgent care visit" meta="February 2 · Sinus infection" />
-      <Row icon={FileText} title="MRI of the left knee" meta="January 18 · Uploaded photo" />
-      <div className="mt-4 rounded-2xl border border-[color:var(--line)] p-3.5">
-        <p className="text-[0.8125rem] text-[color:var(--muted)] mb-1">What this means</p>
-        <p className="text-sm leading-snug">Your LDL cholesterol is above the healthy range. All other results on this panel are normal.</p>
-      </div>
-      <div className="mt-3 flex items-center gap-2.5 text-sm">
-        <Link2 className="w-4 h-4 text-[color:var(--brand)] shrink-0" aria-hidden="true" />
-        <span className="flex-1 min-w-0 truncate">Shared with Dr. Patel until October 15</span>
-        <span className="font-semibold text-[color:var(--brand)]">Revoke</span>
-      </div>
-    </div>
-  );
-}
+/* ---------------- Medications ---------------- */
 
-function MedsMock() {
+export function MedsMock() {
   return (
-    <div className="lp-card p-5 sm:p-6 w-full max-w-[440px]">
+    <div className="lp-card p-5 sm:p-6 w-full max-w-[460px]" aria-hidden="true">
       <div className="flex items-baseline justify-between mb-1">
         <p className="font-semibold">Today's medications</p>
         <p className="text-sm text-[color:var(--muted)]">2 of 3 taken</p>
       </div>
-      <Row icon={Check} done title="Lisinopril 10 mg" meta="8:00 AM with breakfast" right={<span className="text-xs font-semibold text-[color:var(--ok)]">Taken</span>} />
-      <Row icon={Check} done title="Vitamin D 2,000 IU" meta="12:30 PM" right={<span className="text-xs font-semibold text-[color:var(--ok)]">Taken</span>} />
-      <Row icon={Clock} title="Atorvastatin 20 mg" meta="9:00 PM · Reminder set" right={<span className="text-xs font-medium text-[color:var(--muted)]">Tonight</span>} />
-      <div className="mt-4 flex gap-3 rounded-2xl bg-[color:var(--warn-bg)] p-3.5">
-        <Bell className="w-4 h-4 mt-0.5 text-[color:var(--warn)] shrink-0" aria-hidden="true" />
-        <p className="text-sm leading-snug"><span className="font-semibold">Your atorvastatin will run out in 5 days.</span> We will email you a reminder to request a refill.</p>
+      <Row icon={Check} done title="Lisinopril 10 mg" meta="Once daily · 8:00 AM with breakfast" right={<span className="text-xs font-semibold text-[color:var(--ok)]">Taken</span>} />
+      <Row icon={Check} done title="Vitamin D 2,000 IU" meta="Once daily · 12:30 PM" right={<span className="text-xs font-semibold text-[color:var(--ok)]">Taken</span>} />
+      <Row icon={Clock} title="Atorvastatin 20 mg" meta="Once daily · 9:00 PM" right={<span className="text-xs font-medium text-[color:var(--muted)]">Tonight</span>} />
+      <div className="mt-4 grid grid-cols-2 gap-2.5">
+        <div className="rounded-2xl bg-[color:var(--paper-2)] p-3.5">
+          <p className={label}>Adherence, 14 days</p>
+          <p className="mt-1 text-2xl font-semibold lp-display">93%</p>
+        </div>
+        <div className="rounded-2xl bg-[color:var(--warn-bg)] p-3.5">
+          <p className={`${label} !text-[color:var(--warn)]`}>Refill</p>
+          <p className="mt-1 text-sm font-semibold leading-snug">Atorvastatin runs out in 5 days</p>
+        </div>
       </div>
     </div>
   );
 }
 
+/* ---------------- Records, labs and trends ---------------- */
+
 const BP = [128, 131, 127, 133, 130, 135, 134, 138, 137, 141, 143, 142];
 
-function VitalsMock() {
-  const w = 360, h = 150, pad = 8, min = 120, max = 150;
+export function RecordsTrendMock() {
+  const w = 360, h = 120, pad = 8, min = 120, max = 150;
   const x = (i) => pad + (i * (w - pad * 2)) / (BP.length - 1);
   const y = (v) => h - pad - ((v - min) / (max - min)) * (h - pad * 2);
   const d = BP.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
   return (
-    <div className="lp-card p-5 sm:p-6 w-full max-w-[440px]">
-      <div className="flex items-baseline justify-between">
-        <p className="font-semibold">Blood pressure</p>
-        <p className="text-sm text-[color:var(--muted)]">Last 3 weeks</p>
+    <div className="w-full max-w-[460px] space-y-3" aria-hidden="true">
+      <div className="lp-card p-5 sm:p-6">
+        <p className="font-semibold mb-1">Medical records</p>
+        <Row icon={FileText} title="Visit summary, Dr. Patel" meta="Uploaded PDF · March 12" right={<span className="text-xs font-semibold rounded-full px-2 py-0.5 bg-[color:var(--ok-bg)] text-[color:var(--ok)]">2 values added</span>} />
+        <Row icon={FileText} title="Urgent care discharge" meta="Uploaded photo · February 2" />
       </div>
-      <p className="mt-1 text-3xl font-semibold tracking-tight lp-display">142<span className="text-[color:var(--muted)]">/90</span></p>
-      <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto mt-3" role="img" aria-label="Systolic blood pressure rising from 128 to 142 over three weeks, crossing a limit of 140">
-        <line x1="0" x2={w} y1={y(140)} y2={y(140)} stroke="#b42318" strokeDasharray="4 5" strokeWidth="1.25" opacity="0.6" />
-        <text x={w - 4} y={y(140) - 6} textAnchor="end" fontSize="11" fill="#b42318">Your limit: 140</text>
-        <path d={`${d} L${x(BP.length - 1)},${h} L${x(0)},${h} Z`} fill="#0369a1" opacity="0.07" />
-        <path d={d} fill="none" stroke="#0369a1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        {BP.map((v, i) => (
-          <circle key={i} cx={x(i)} cy={y(v)} r={i === BP.length - 1 ? 4.5 : 2.5} fill={v > 140 ? "#b42318" : "#0369a1"} />
-        ))}
-      </svg>
-      <div className="mt-3 flex gap-3 rounded-2xl bg-[color:var(--urgent-bg)] p-3.5">
-        <Activity className="w-4 h-4 mt-0.5 text-[color:var(--urgent)] shrink-0" aria-hidden="true" />
-        <p className="text-sm leading-snug"><span className="font-semibold">Three readings were above your limit this week.</span> We sent you an email each time.</p>
+      <div className="lp-card p-5 sm:p-6">
+        <div className="flex items-baseline justify-between">
+          <p className="font-semibold">Blood pressure</p>
+          <p className="text-sm text-[color:var(--muted)]">Last 3 weeks</p>
+        </div>
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto mt-3">
+          <line x1="0" x2={w} y1={y(140)} y2={y(140)} stroke="#b42318" strokeDasharray="4 5" strokeWidth="1.25" opacity="0.6" />
+          <text x={4} y={y(140) - 6} textAnchor="start" fontSize="11" fill="#b42318">Your limit: 140</text>
+          <path d={`${d} L${x(BP.length - 1)},${h} L${x(0)},${h} Z`} fill="#0369a1" opacity="0.07" />
+          <path d={d} fill="none" stroke="#0369a1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          {BP.map((v, i) => <circle key={i} cx={x(i)} cy={y(v)} r={i === BP.length - 1 ? 4.5 : 2.5} fill={v > 140 ? "#b42318" : "#0369a1"} />)}
+        </svg>
+        <p className="mt-2 text-sm text-[color:var(--ink-2)]">Readings from your log and uploaded records, in one timeline.</p>
       </div>
     </div>
   );
 }
 
-function EmergencyMock() {
-  const field = (label, value) => (
+/* ---------------- Family profiles ---------------- */
+
+const FAMILY = [
+  { initials: "JR", name: "Jordan (you)", meta: "3 medications · 2 records this month", tone: "bg-[#e6f3fa] text-[#0369a1]" },
+  { initials: "SR", name: "Sam", meta: "Partner · 1 medication", tone: "bg-[#e7f5ec] text-[#146c43]" },
+  { initials: "MR", name: "Maya", meta: "Age 7 · checkup on Thursday", tone: "bg-[#fdecf3] text-[#a1345f]", active: true },
+  { initials: "LR", name: "Linda", meta: "Age 71 · 4 medications · caregiver alerts on", tone: "bg-[#efeafd] text-[#5b3fb0]" },
+];
+
+export function FamilyMock() {
+  return (
+    <div className="lp-card p-5 sm:p-6 w-full max-w-[440px]" aria-hidden="true">
+      <p className="font-semibold mb-2">Family profiles</p>
+      {FAMILY.map((p) => (
+        <div key={p.name} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 ${p.active ? "bg-[color:var(--sky-wash)]" : ""}`}>
+          <span className={`grid place-items-center w-10 h-10 rounded-full text-sm font-semibold shrink-0 ${p.tone}`}>{p.initials}</span>
+          <div className="flex-1 min-w-0">
+            <p className="font-medium">{p.name}</p>
+            <p className="text-sm text-[color:var(--muted)] truncate">{p.meta}</p>
+          </div>
+          {p.active && <Check className="w-5 h-5 text-[color:var(--brand)] shrink-0" />}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ---------------- Emergency information ---------------- */
+
+export function EmergencyMock() {
+  const field = (name, value) => (
     <div>
-      <p className="text-[0.6875rem] font-semibold uppercase tracking-wider text-[color:var(--muted)]">{label}</p>
+      <p className={label}>{name}</p>
       <p className="text-[0.9375rem] font-medium leading-snug">{value}</p>
     </div>
   );
   return (
-    <div className="lp-card p-5 sm:p-6 w-full max-w-[440px]">
+    <div className="lp-card p-5 sm:p-6 w-full max-w-[440px]" aria-hidden="true">
       <div className="flex items-center gap-3 pb-4 border-b border-[color:var(--line)]">
         <span className="grid place-items-center w-11 h-11 rounded-full bg-[color:var(--paper-2)] font-semibold">JR</span>
         <div className="flex-1">
           <p className="font-semibold">Jordan Rivera</p>
-          <p className="text-sm text-[color:var(--muted)]">Emergency profile</p>
+          <p className="text-sm text-[color:var(--muted)]">Emergency health information</p>
         </div>
-        <ShieldAlert className="w-5 h-5 text-[color:var(--urgent)]" aria-hidden="true" />
+        <ShieldAlert className="w-5 h-5 text-[color:var(--urgent)]" />
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-3 py-4">
         {field("Blood type", "O positive")}
@@ -369,7 +308,7 @@ function EmergencyMock() {
       </div>
       <div className="flex gap-2">
         <span className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--urgent)] text-white font-semibold text-sm h-11">
-          <Phone className="w-4 h-4" aria-hidden="true" /> Call 911
+          <Phone className="w-4 h-4" /> Call 911
         </span>
         <span className="flex-1 inline-flex items-center justify-center rounded-full border border-[color:var(--line)] font-semibold text-sm h-11">
           Print card
@@ -379,124 +318,38 @@ function EmergencyMock() {
   );
 }
 
-const TOUR = [
-  {
-    id: "records", icon: FolderOpen, Mock: RecordsMock,
-    title: "Lab results explained in plain English.",
-    body: "Upload a lab report or medical record, and Health Me will explain what it means. You can share it with your doctor through a link that expires automatically.",
-  },
-  {
-    id: "meds", icon: Pill, Mock: MedsMock,
-    title: "Medication reminders and refill alerts.",
-    body: "Health Me reminds you when to take each medication and emails you before a prescription runs out.",
-  },
-  {
-    id: "vitals", icon: Activity, Mock: VitalsMock,
-    title: "Your vital signs, tracked over time.",
-    body: "Record your blood pressure, blood sugar and weight to see how they change. If a reading goes above a limit you set, you will receive an email.",
-  },
-  {
-    id: "emergency", icon: ShieldAlert, Mock: EmergencyMock,
-    title: "Critical information, ready in an emergency.",
-    body: "Keep your blood type, allergies, medications and emergency contacts in one place. One tap calls 911 and emails your location to your emergency contacts.",
-  },
-];
+/* ---------------- Clinician sharing ---------------- */
 
-export function ProductTour() {
-  const [active, setActive] = useState(TOUR[0].id);
-  const tabRefs = useRef([]);
-  const panelRef = useRef(null);
-  const item = TOUR.find((t) => t.id === active);
-
-  const select = (id) => {
-    setActive(id);
-    track("landing_tour_tab", { tab: id });
-  };
-
-  const onTap = (id) => {
-    select(id);
-    if (window.innerWidth < 1024) {
-      requestAnimationFrame(() => panelRef.current?.scrollIntoView({ block: "nearest", behavior: prefersReducedMotion() ? "auto" : "smooth" }));
-    }
-  };
-
-  const onKey = (e, i) => {
-    const dir = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
-    if (!dir) return;
-    e.preventDefault();
-    const n = (i + dir + TOUR.length) % TOUR.length;
-    tabRefs.current[n]?.focus();
-    select(TOUR[n].id);
-  };
-
+export function SharingMock() {
+  const scopes = [["Medical records", true], ["Medications", true], ["Vitals", true], ["Past health conversations", false]];
   return (
-    <div className="rounded-[32px] bg-[color:var(--paper-2)] p-3 sm:p-6 lg:p-10 grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] gap-6 lg:gap-12 items-center">
-      <div role="tablist" aria-label="Health history features" aria-orientation="vertical" className="flex flex-col gap-1.5">
-        {TOUR.map((t, i) => {
-          const selected = t.id === active;
-          return (
-            <button
-              key={t.id}
-              ref={(el) => (tabRefs.current[i] = el)}
-              role="tab"
-              id={`tour-tab-${t.id}`}
-              aria-selected={selected}
-              aria-controls="tour-panel"
-              tabIndex={selected ? 0 : -1}
-              onClick={() => onTap(t.id)}
-              onKeyDown={(e) => onKey(e, i)}
-              className={`text-left rounded-2xl p-4 sm:p-5 transition-colors ${
-                selected ? "bg-white shadow-[0_0_0_1px_rgba(15,30,44,0.06),0_8px_24px_-12px_rgba(15,30,44,0.25)]" : "hover:bg-white/60"
-              }`}
-            >
-              <span className="flex items-center gap-3.5">
-                <span className={`grid place-items-center w-9 h-9 rounded-xl shrink-0 transition-colors ${selected ? "bg-[color:var(--brand)] text-white" : "bg-white text-[color:var(--ink-2)]"}`}>
-                  <t.icon className="w-4 h-4" aria-hidden="true" />
-                </span>
-                <span className={`lp-display font-semibold text-[1.125rem] sm:text-[1.25rem] tracking-[-0.02em] ${selected ? "text-[color:var(--ink)]" : "text-[color:var(--ink-2)]"}`}>
-                  {t.title}
-                </span>
-              </span>
-              {selected && (
-                <span className="lp-fade block mt-2 pl-[3.125rem] text-[1rem] sm:text-[1.0625rem] leading-relaxed text-[color:var(--ink-2)]">{t.body}</span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      <div id="tour-panel" ref={panelRef} role="tabpanel" aria-labelledby={`tour-tab-${item.id}`} className="flex justify-center items-center lg:min-h-[480px]">
-        <div key={item.id} className="lp-fade w-full flex justify-center" aria-hidden="true">
-          <item.Mock />
+    <div className="lp-card p-5 sm:p-6 w-full max-w-[440px]" aria-hidden="true">
+      <div className="flex items-center gap-3 pb-4 border-b border-[color:var(--line)]">
+        <span className="grid place-items-center w-10 h-10 rounded-full bg-[color:var(--sky-wash)] text-[color:var(--brand)] text-sm font-semibold">AP</span>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold">Dr. Anita Patel</p>
+          <p className="text-sm text-[color:var(--muted)]">Access expires October 15</p>
         </div>
+        <span className="text-sm font-semibold text-[color:var(--brand)]">Revoke</span>
       </div>
-    </div>
-  );
-}
-
-/* ---------------- Family profiles ---------------- */
-
-const FAMILY = [
-  { initials: "JR", name: "Jordan (you)", meta: "Age 42", tone: "bg-[#e6f3fa] text-[#0369a1]" },
-  { initials: "SR", name: "Sam", meta: "Age 44", tone: "bg-[#e7f5ec] text-[#146c43]" },
-  { initials: "MR", name: "Maya", meta: "Age 7", tone: "bg-[#fdecf3] text-[#a1345f]" },
-  { initials: "LR", name: "Linda", meta: "Age 71", tone: "bg-[#efeafd] text-[#5b3fb0]" },
-];
-
-export function FamilyMock() {
-  return (
-    <div className="lp-card p-5 sm:p-6 w-full max-w-[420px]" aria-hidden="true">
-      <p className="font-semibold mb-2">Whose health are you asking about?</p>
-      {FAMILY.map((p, i) => (
-        <div key={p.name} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 ${i === 2 ? "bg-[color:var(--sky-wash)]" : ""}`}>
-          <span className={`grid place-items-center w-10 h-10 rounded-full text-sm font-semibold shrink-0 ${p.tone}`}>{p.initials}</span>
-          <div className="flex-1">
-            <p className="font-medium">{p.name}</p>
-            <p className="text-sm text-[color:var(--muted)]">{p.meta}</p>
-          </div>
-          {i === 2 && <Check className="w-5 h-5 text-[color:var(--brand)]" />}
+      <p className={`${label} mt-4 mb-1`}>What she can see</p>
+      {scopes.map(([s, onState]) => (
+        <div key={s} className="flex items-center justify-between py-2">
+          <span className="text-[0.9375rem]">{s}</span>
+          <span className={`w-9 h-5 rounded-full relative ${onState ? "bg-[color:var(--brand)]" : "bg-[color:var(--line)]"}`}>
+            <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow ${onState ? "left-[18px]" : "left-0.5"}`} />
+          </span>
         </div>
       ))}
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <span className="inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--line)] text-sm font-semibold h-11">
+          <Download className="w-4 h-4" /> PDF summary
+        </span>
+        <span className="inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--line)] text-sm font-semibold h-11">
+          <Link2 className="w-4 h-4" /> Share link
+        </span>
+      </div>
     </div>
   );
 }
+
