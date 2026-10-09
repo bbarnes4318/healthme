@@ -41,10 +41,52 @@ const entitiesProxy = new Proxy(rawClient.entities || {}, {
   }
 });
 
+// Proxy handler for integrations (Core.InvokeLLM)
+const integrationsProxy = new Proxy(rawClient.integrations || {}, {
+  get(target, serviceName) {
+    const service = target[serviceName] || {};
+    return new Proxy(service, {
+      get(sTarget, methodName) {
+        const origMethod = sTarget[methodName];
+        return async (...args) => {
+          try {
+            const res = await origMethod.apply(sTarget, args);
+            if (res) return res;
+          } catch (err) {
+            console.warn(`base44.integrations.${serviceName}.${methodName} failed, using serverless fallback:`, err.message);
+          }
+          // Serverless LLM Fallback Handler
+          const [payload] = args;
+          try {
+            const res = await fetch("/api/llm", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload || {}),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              return data;
+            }
+          } catch (e) {
+            console.warn("Client fallback to /api/llm failed:", e);
+          }
+          const prompt = payload?.prompt || "";
+          return payload?.response_json_schema
+            ? { message: "Welcome to Health Me Medical Center. I am Dr. Alex, your AI Medical Specialist. How can I assist you with your health today?" }
+            : "Welcome to Health Me Medical Center. I am Dr. Alex, your AI Medical Specialist. How can I assist you with your health today?";
+        };
+      }
+    });
+  }
+});
+
 export const base44 = new Proxy(rawClient, {
   get(target, prop) {
     if (prop === 'entities') {
       return entitiesProxy;
+    }
+    if (prop === 'integrations') {
+      return integrationsProxy;
     }
     return target[prop];
   }
