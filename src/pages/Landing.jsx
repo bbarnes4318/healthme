@@ -8,8 +8,13 @@ import "@/components/landing/landing.css";
 
 const container = "mx-auto w-full max-w-[1200px] px-5 sm:px-8";
 const section = "py-16 sm:py-24";
-const h2 = "lp-display font-bold text-[2.125rem] leading-[1.06] sm:text-[2.75rem] lg:text-[3.25rem]";
-const body = "text-[1.0625rem] sm:text-lg leading-relaxed text-[color:var(--ink-2)]";
+// Type scale: HERO > DISPLAY (manifesto, close) > STATEMENT (big idea lines) > H2 (section heads) > LEAD > SMALL.
+const HERO = "lp-display font-extrabold text-[2.75rem] leading-[0.98] sm:text-[4rem] lg:text-[3.5rem] xl:text-[4.75rem] tracking-[-0.05em]";
+const DISPLAY = "lp-display font-extrabold text-[2.75rem] leading-[1] sm:text-[4rem] lg:text-[5rem] tracking-[-0.05em]";
+const STATEMENT = "lp-display font-extrabold text-[2.25rem] leading-[1.02] sm:text-[3.25rem] lg:text-[4rem] tracking-[-0.045em]";
+const H2 = "lp-display font-bold text-[2rem] leading-[1.06] sm:text-[2.625rem] lg:text-[3.125rem] tracking-[-0.04em]";
+const LEAD = "text-[1.0625rem] sm:text-[1.1875rem] leading-relaxed text-[color:var(--ink-2)]";
+const SMALL = "text-[0.875rem] leading-relaxed text-[color:var(--muted)]";
 // Section surfaces, alternated so each idea reads as its own moment.
 const BG = {
   paper: "bg-[color:var(--paper)]",
@@ -17,8 +22,8 @@ const BG = {
   sky: "bg-[color:var(--sky-band)]",
   white: "bg-white",
 };
-// Logged-out visitors go to /register before anything else, so the one CTA names that step.
-const CTA_LABEL = "Start My Health Profile";
+// Preparing starts with a free profile: the CTA goes to /register.
+const CTA_LABEL = "Prepare for My Next Visit";
 
 function Cta({ src, size = "", className = "" }) {
   return (
@@ -98,37 +103,34 @@ function Chips({ items, className = "" }) {
 function Hero({ ctaRef }) {
   return (
     <section aria-labelledby="hero-title" className={`relative overflow-hidden ${BG.paper}`}>
-      <div className={`${container} relative grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)] gap-12 lg:gap-6 items-center pt-6 sm:pt-12 lg:pt-2 pb-14 sm:pb-20 lg:pb-10 lg:min-h-[calc(100svh-64px)] lg:max-h-[860px]`}>
+      <div className={`${container} relative grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.9fr)] gap-12 lg:gap-10 items-center pt-6 sm:pt-12 lg:pt-2 pb-14 sm:pb-20 lg:pb-10 lg:min-h-[calc(100svh-64px)] lg:max-h-[860px]`}>
         <div>
-          <Eyebrow>Better prepared for your next appointment</Eyebrow>
-          <h1 id="hero-title" className="lp-display mt-3 font-extrabold text-[3.125rem] leading-[0.96] sm:text-[4.5rem] lg:text-[3.875rem] xl:text-[5rem] tracking-[-0.05em]">
-            <span className="lg:block lg:whitespace-nowrap">Your doctor only </span>
-            <span className="lg:block lg:whitespace-nowrap">knows what makes it </span>
-            <span className="lg:block lg:whitespace-nowrap text-[color:var(--brand)]">into the&nbsp;room.</span>
+          <Eyebrow>Your next appointment starts now</Eyebrow>
+          <h1 id="hero-title" className={`${HERO} mt-3`}>
+            <span className="block">Your health happens between appointments.</span>
+            <span className="block text-[color:var(--brand)]">Bring it with you.</span>
           </h1>
-          <ul className="lp-serif italic mt-4 text-[1.1875rem] sm:text-[1.375rem] leading-[1.35] text-[color:var(--ink)]">
-            <li>Symptoms you forgot.</li>
-            <li>Questions you meant to ask.</li>
-            <li>Medication changes you didn't think mattered.</li>
-          </ul>
-          <p className="mt-4 max-w-[540px] text-[1.0625rem] sm:text-[1.125rem] leading-relaxed text-[color:var(--ink-2)]">
-            Health Me helps you capture what happens between visits and organize it before your appointment, so you
-            walk in with the whole picture.
+          <p className="lp-serif italic mt-5 max-w-[600px] text-[1.25rem] sm:text-[1.375rem] leading-[1.35] text-[color:var(--ink)]">
+            Symptoms change. Medications change. Questions come up. Details get forgotten.
           </p>
-          <div ref={ctaRef} className="mt-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+          <p className={`${LEAD} mt-3 max-w-[580px]`}>
+            Health Me helps you capture what happens between visits and organize it into a clear Appointment Brief for
+            your next conversation with your doctor.
+          </p>
+          <div ref={ctaRef} className="mt-7 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-x-6">
             <Cta src="hero" size="lp-btn--lg lp-btn--xl" className="w-full sm:w-auto" />
             <a
               href="#how"
               onClick={() => track("landing_secondary_click", { location: "hero_how" })}
-              className="inline-flex items-center justify-center gap-2 min-h-[48px] font-semibold whitespace-nowrap text-[color:var(--ink)] underline-offset-4 hover:underline"
+              className="inline-flex items-center justify-center gap-2 min-h-[48px] text-[1.0625rem] font-semibold whitespace-nowrap text-[color:var(--ink)] underline-offset-4 hover:underline"
             >
               See How Health Me Works <ArrowDown className="w-4 h-4" aria-hidden="true" />
             </a>
           </div>
-          <p className="mt-4 text-[0.9375rem] font-medium text-[color:var(--ink)]">
+          <p className="mt-5 text-[1rem] font-medium text-[color:var(--ink)]">
             Less forgetting. Better questions. More complete conversations.
           </p>
-          <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-[color:var(--muted)] max-w-[560px]">
+          <p className={`mt-2 max-w-[560px] ${SMALL}`}>
             Health Me provides health information and AI-guided support. It does not replace emergency care or diagnosis
             and treatment from a licensed healthcare professional.
           </p>
@@ -139,27 +141,17 @@ function Hero({ ctaRef }) {
   );
 }
 
-/* 2. Scattered → captured */
+/* 2. Emotional pain: scattered → captured */
 function ProblemSection() {
   return (
     <section aria-labelledby="problem-title" className={`${section} ${BG.warm}`}>
       <div className={`${container} grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-12 lg:gap-16 items-center`}>
         <div className="max-w-[540px]">
           <Eyebrow>That appointment matters</Eyebrow>
-          <h2 id="problem-title" className={`${h2} mt-3`}>Don't spend the drive home remembering everything you forgot to say.</h2>
-          <div className={`${body} mt-6 space-y-4`}>
-            <p>
-              You finally get in front of the doctor. They ask what's going on. You try to remember when it started, what
-              changed, which medication you're taking.
-            </p>
-            <p>
-              Then the appointment is over. Twenty minutes later:
-              <em className="block mt-2 lp-serif text-[1.625rem] leading-tight text-[color:var(--ink)]">&ldquo;I forgot to tell them&hellip;&rdquo;</em>
-            </p>
-            <p>
-              <strong className="font-semibold text-[color:var(--ink)]">Health Me is designed to help prevent that.</strong>
-            </p>
-          </div>
+          <h2 id="problem-title" className={`${H2} mt-3`}>Don't spend the drive home remembering everything you forgot to say.</h2>
+          <p className={`${LEAD} mt-6`}>You finally get in front of the doctor. They ask what's going on. Then it's over.</p>
+          <p className="lp-serif italic mt-4 text-[1.75rem] leading-tight text-[color:var(--ink)]">&ldquo;I forgot to tell them&hellip;&rdquo;</p>
+          <p className="mt-4 text-[1.125rem] font-semibold text-[color:var(--ink)]">Health Me is designed to help prevent that.</p>
         </div>
         <div className="flex lg:justify-end"><ScatteredToCaptured /></div>
       </div>
@@ -167,90 +159,90 @@ function ProblemSection() {
   );
 }
 
-/* 3. Centerpiece: between appointments, Monday through Monday */
+/* 3. The context problem */
+function RoomSection() {
+  return (
+    <section aria-labelledby="room-title" className={`${section} ${BG.white}`}>
+      <div className={`${container} grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] gap-8 lg:gap-16 items-end`}>
+        <h2 id="room-title" className={STATEMENT}>
+          Your doctor only knows what makes it <span className="text-[color:var(--brand)]">into the&nbsp;room.</span>
+        </h2>
+        <div className={`${LEAD} space-y-4 lg:pb-2`}>
+          <p className="text-[color:var(--ink)] font-semibold">Your doctor brings medical expertise into the room.</p>
+          <p className="text-[color:var(--ink)] font-semibold">You bring the lived experience of what has happened since the last visit.</p>
+          <p>Health Me helps you organize that experience so important details are less likely to disappear from the conversation.</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* 4. Timeline: Monday through Monday */
 function TimelineSection() {
   return (
     <section aria-labelledby="between-title" className={`${section} ${BG.sky}`}>
       <div className={container}>
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6 lg:gap-16 items-end">
-          <div>
-            <Eyebrow>Your medical record isn't your whole health story</Eyebrow>
-            <h2 id="between-title" className={`${h2} mt-3`}>Your health happens between appointments.</h2>
-          </div>
-          <div>
-            <p className={body}>
-              Your record may show the appointment, the prescription and the lab result. It may not show what you lived
-              through around them:
-            </p>
-            <Chips
-              className="mt-4"
-              items={["How you felt", "What changed", "What came back", "What worried you", "What your spouse noticed", "Questions you meant to ask"]}
-            />
-          </div>
-        </div>
-
-        <div className="mt-10 sm:mt-14"><WholeWeek /></div>
-
-        <p className="lp-display mt-12 sm:mt-16 font-extrabold text-[2.25rem] leading-[1.02] sm:text-[3.25rem] lg:text-[4rem] tracking-[-0.045em]">
+        <Eyebrow>Your medical record isn't your whole health story</Eyebrow>
+        <h2 id="between-title" className={`${STATEMENT} mt-3`}>
           <span className="block">Your doctor sees Tuesday.</span>
           <span className="block text-[color:var(--brand)]">Health Me helps you bring Monday through&nbsp;Monday.</span>
-        </p>
+        </h2>
+        <div className="mt-10 sm:mt-14"><WholeWeek /></div>
+        <div className="mt-8 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
+          <p className={`${LEAD} lg:max-w-[460px] shrink-0`}>Your record may show the appointment. It may not show what you lived through around it:</p>
+          <Chips items={["How you felt", "What changed", "What came back", "What worried you", "What your spouse noticed", "Questions you meant to ask"]} />
+        </div>
       </div>
     </section>
   );
 }
 
-/* 4. Before / after */
+/* 5. Proof: same patient, better context */
 function BeforeAfterSection() {
   return (
     <section aria-labelledby="context-title" className={`${section} ${BG.white}`}>
       <div className={container}>
-        <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] rounded-[32px] overflow-hidden">
-          <span aria-hidden="true" className="hidden lg:grid absolute z-10 left-[45%] top-1/2 -translate-x-1/2 -translate-y-1/2 place-items-center w-16 h-16 rounded-full bg-[color:var(--brand)] text-white ring-[10px] ring-white">
-            <ArrowRight className="w-7 h-7" />
-          </span>
-          <div className="relative bg-[#ece8e1] p-7 sm:p-12 flex flex-col min-h-[280px] lg:min-h-[520px]">
-            <p className="lp-eyebrow !text-[color:var(--muted)]">Without Health Me <span className="font-medium normal-case tracking-normal">· vague memory</span></p>
-            <p className="lp-serif italic my-auto py-8 lg:py-0 text-[2.75rem] sm:text-[3.75rem] lg:text-[4.5rem] leading-[1] text-[#6b6458]">
-              &ldquo;I've just felt off lately.&rdquo;
-            </p>
-            <ul aria-hidden="true" className="lp-serif italic space-y-1 text-[1.0625rem] sm:text-[1.1875rem] text-[#aaa293]">
-              <li>&hellip;started a week ago? Maybe two?</li>
-              <li>&hellip;I think something changed with my pills?</li>
-              <li>&hellip;not sure what my blood pressure was.</li>
-            </ul>
-          </div>
-          <div className="bg-[color:var(--ink)] p-7 sm:p-12 lg:pl-16">
-            <p className="lp-eyebrow !text-sky-300 mb-5 flex items-center gap-2 lg:pl-6"><Mark className="w-5 h-5" /> With Health Me <span className="font-medium normal-case tracking-normal text-white/60">· structured context</span></p>
-            <BetterContext />
-          </div>
-        </div>
-        <div className="mt-10 sm:mt-14 grid grid-cols-1 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,0.75fr)] gap-5 lg:gap-12 items-end">
-          <h2 id="context-title" className="lp-display font-extrabold text-[3rem] leading-[0.98] sm:text-[4.5rem] lg:text-[5.5rem] tracking-[-0.05em]">
-            <span className="block sm:whitespace-nowrap">Same patient.</span>
-            <span className="block sm:whitespace-nowrap text-[color:var(--brand)]">Better context.</span>
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6 lg:gap-16 items-end">
+          <h2 id="context-title" className={STATEMENT}>
+            <span className="block">Same patient.</span>
+            <span className="block text-[color:var(--brand)]">Better context.</span>
           </h2>
-          <p className={`${body} lg:pb-2`}>
+          <p className={`${LEAD} lg:pb-2`}>
             Health Me doesn't diagnose for your doctor. It helps you walk into the conversation with more of the
             information your doctor may want to consider.
           </p>
+        </div>
+        <div className="relative mt-10 sm:mt-14 grid grid-cols-1 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] gap-5 lg:gap-8 items-stretch">
+          <span aria-hidden="true" className="hidden lg:grid absolute z-10 left-[37.5%] top-1/2 -translate-x-1/2 -translate-y-1/2 place-items-center w-14 h-14 rounded-full bg-[color:var(--brand)] text-white ring-8 ring-white">
+            <ArrowRight className="w-6 h-6" />
+          </span>
+          <div className="rounded-[28px] bg-[#ece8e1] p-7 sm:p-10 flex flex-col justify-center">
+            <p className="lp-eyebrow !text-[color:var(--muted)]">Without Health Me</p>
+            <p className="lp-serif italic mt-5 text-[2.75rem] sm:text-[3.5rem] leading-[1] text-[#6b6458]">&ldquo;I've just felt off lately.&rdquo;</p>
+            <ul aria-hidden="true" className="lp-serif italic mt-6 space-y-1 text-[1.125rem] text-[#a39b8d]">
+              <li>&hellip;started a week ago? Maybe two?</li>
+              <li>&hellip;I think something changed with my pills?</li>
+            </ul>
+          </div>
+          <div>
+            <p className="lp-eyebrow mb-3 lg:hidden">With Health Me</p>
+            <BetterContext />
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* 5. Guided intake */
+/* 6. Guided intake */
 function PrepSection() {
   return (
     <section id="how" aria-labelledby="how-title" className={`${section} ${BG.warm}`}>
       <div className={container}>
         <Eyebrow>Before the appointment</Eyebrow>
-        <h2 id="how-title" className={`${h2} mt-3 max-w-[900px]`}>Turn &ldquo;something feels wrong&rdquo; into a conversation your doctor can actually use.</h2>
-
+        <h2 id="how-title" className={`${H2} mt-3 max-w-[900px]`}>Turn &ldquo;something feels wrong&rdquo; into a conversation your doctor can actually use.</h2>
         <div className="mt-10 sm:mt-14"><IntakeFlow /></div>
-
-        <p className="lp-display mt-12 sm:mt-16 pt-10 sm:pt-14 border-t-2 border-[color:var(--ink)] max-w-[1100px] text-[1.875rem] sm:text-[2.5rem] lg:text-[3.125rem] leading-[1.08] font-extrabold tracking-[-0.04em]">
+        <p className={`${H2} !font-extrabold mt-14 sm:mt-20 pt-10 sm:pt-14 border-t border-[color:var(--ink)]/20 max-w-[1100px]`}>
           <span className="block text-[color:var(--muted)]">The goal isn't to tell your doctor what the diagnosis&nbsp;is.</span>
           <span className="block">The goal is to make sure your doctor has a better picture of&nbsp;you.</span>
         </p>
@@ -259,7 +251,7 @@ function PrepSection() {
   );
 }
 
-/* 6. AI positioning */
+/* 7. AI preparation */
 function AiSection() {
   return (
     <section aria-labelledby="ai-title" className={`${section} ${BG.white}`}>
@@ -267,19 +259,18 @@ function AiSection() {
         <div className="order-2 lg:order-1 flex lg:justify-start"><NightChat /></div>
         <div className="order-1 lg:order-2 max-w-[560px]">
           <Eyebrow>AI that helps you prepare — not replace your doctor</Eyebrow>
-          <h2 id="ai-title" className={`${h2} mt-3`}>Think through your health before you're sitting on the exam table.</h2>
-          <p className={`${body} mt-6`}>Health questions rarely appear at the exact moment you're speaking with your doctor. They happen:</p>
+          <h2 id="ai-title" className={`${H2} mt-3`}>Think through your health before you're sitting on the exam table.</h2>
+          <p className={`${LEAD} mt-6`}>Health questions rarely appear at the exact moment you're speaking with your doctor. They happen:</p>
           <Chips className="mt-4" items={["At home", "At night", "After a medication changes", "After a new symptom", "After a lab result arrives"]} />
-          <p className={`${body} mt-5`}>
-            Health Me gives you a place to work through those concerns while they're fresh, connected to the health
-            information you're already tracking. Then take that context into the conversation with your healthcare
-            professional.
+          <p className={`${LEAD} mt-5`}>
+            Work through those concerns while they're fresh, connected to the health information you're already
+            tracking. Then take that context to your healthcare professional.
           </p>
         </div>
       </div>
       <div className={`${container} mt-14 sm:mt-20`}>
-        <div className="rounded-[32px] bg-[color:var(--sky-band)] px-7 py-10 sm:px-14 sm:py-16">
-          <p className="lp-display max-w-[980px] font-bold text-[2rem] leading-[1.08] sm:text-[2.75rem] lg:text-[3.5rem] tracking-[-0.04em]">
+        <div className="rounded-[28px] bg-[color:var(--sky-band)] px-7 py-10 sm:px-14 sm:py-14">
+          <p className={`${STATEMENT} max-w-[1000px]`}>
             AI shouldn't replace the doctor&#8209;patient relationship.{" "}
             <span className="text-[color:var(--brand)]">It should help you make more of it.</span>
           </p>
@@ -289,42 +280,40 @@ function AiSection() {
   );
 }
 
-/* 7. Brand manifesto */
+/* 8. Brand manifesto */
 const STORY_WORDS = ["Symptoms.", "Medications.", "Questions.", "Records.", "Vitals.", "Labs.", "Changes you've noticed.", "Concerns you've been carrying around."];
 
 function BrandStatement() {
   return (
     <section aria-labelledby="brand-title" className="lp-dark relative overflow-hidden bg-[color:var(--ink)] text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.5]" style={{ background: "radial-gradient(60% 80% at 85% 10%, rgba(14,165,233,0.22), transparent 60%)" }} />
-      <div className={`${container} relative pt-24 sm:pt-32 pb-28 sm:pb-40`}>
-        <h2 id="brand-title" className="lp-display max-w-[1060px] font-bold text-[2.75rem] leading-[1.02] sm:text-[4rem] lg:text-[5.25rem] tracking-[-0.045em]">
+      <div className={`${container} relative py-20 sm:py-28`}>
+        <h2 id="brand-title" className={`${DISPLAY} max-w-[1060px]`}>
           Don't replace your doctor. Bring them a better&#8209;prepared patient.
         </h2>
-        <div className="mt-12 sm:mt-16 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-8 lg:gap-20">
+        <div className="mt-10 sm:mt-14 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-8 lg:gap-20">
           <p className="text-lg sm:text-[1.25rem] leading-relaxed text-white/75 max-w-[440px]">
             Health Me helps you capture what happens between appointments so your next healthcare conversation can
             start with more context.
           </p>
-          <div>
-            <p className="lp-display text-[1.5rem] sm:text-[2rem] leading-[1.3] font-semibold">
-              {STORY_WORDS.map((w, i) => (
-                <span key={w} className="text-white" style={{ opacity: 0.45 + (i / (STORY_WORDS.length - 1)) * 0.55 }}>{w} </span>
-              ))}
-            </p>
-            <p className="mt-8 pt-8 border-t border-white/15 lp-display text-[1.5rem] sm:text-[2rem] font-semibold text-white">
-              One place. Ready when the appointment starts.
-            </p>
-          </div>
+          <p className="lp-display text-[1.5rem] sm:text-[2rem] leading-[1.3] font-semibold">
+            {STORY_WORDS.map((w, i) => (
+              <span key={w} className="text-white" style={{ opacity: 0.45 + (i / (STORY_WORDS.length - 1)) * 0.55 }}>{w} </span>
+            ))}
+          </p>
         </div>
-        <p className="lp-serif italic mt-20 sm:mt-32 text-[4rem] sm:text-[6.5rem] lg:text-[8.5rem] xl:text-[9.5rem] leading-[0.9] tracking-[-0.025em] text-sky-300 [text-wrap:balance]">
-          <span className="sm:block">Bring the </span><span className="sm:block">whole story.</span>
-        </p>
+        <div className="mt-12 sm:mt-16 pt-10 sm:pt-14 border-t border-white/15 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-6 lg:gap-20 items-end">
+          <p className="lp-display text-[1.25rem] sm:text-[1.5rem] font-semibold text-white/80 lg:pb-5">One place. Ready when the appointment starts.</p>
+          <p className="lp-serif italic text-[3.75rem] sm:text-[5.5rem] lg:text-[7rem] leading-[0.92] tracking-[-0.025em] text-sky-300">
+            <span className="sm:block">Bring the </span><span className="sm:block">whole story.</span>
+          </p>
+        </div>
       </div>
     </section>
   );
 }
 
-/* 8. Many signals → one visit brief */
+/* 9. Many signals → one Appointment Brief */
 function FeaturesSection() {
   return (
     <section id="features" aria-labelledby="features-title" className={`${section} ${BG.warm}`}>
@@ -332,11 +321,9 @@ function FeaturesSection() {
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] gap-4 lg:gap-16 items-end">
           <div>
             <Eyebrow>One place to build the story</Eyebrow>
-            <h2 id="features-title" className={`${h2} mt-3`}>Everything your next health conversation may depend on.</h2>
+            <h2 id="features-title" className={`${H2} mt-3`}>Everything your next health conversation may depend on.</h2>
           </div>
-          <p className="lp-display text-[1.375rem] sm:text-[1.5rem] leading-snug font-semibold tracking-[-0.02em] text-[color:var(--ink)]">
-            Different pieces of your health. One clearer story for the appointment.
-          </p>
+          <p className={`${LEAD} lg:pb-1`}>Different pieces of your health, organized into one Health Me Appointment Brief.</p>
         </div>
         <div className="mt-10 sm:mt-14"><SignalsToBrief /></div>
       </div>
@@ -344,55 +331,45 @@ function FeaturesSection() {
   );
 }
 
-/* 9. Family and caregiving */
+/* 10. Family and caregiving */
 function FamilySection() {
   return (
     <section id="family" aria-labelledby="family-title" className={`${section} ${BG.white}`}>
-      <div className={`${container} grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] gap-12 lg:gap-20 items-center`}>
-        <div className="order-2 lg:order-1 flex lg:justify-start"><CaregiverMock /></div>
-        <div className="order-1 lg:order-2 max-w-[520px]">
-          <Eyebrow>When you're speaking for someone else</Eyebrow>
-          <h2 id="family-title" className={`${h2} mt-3`}>It's even harder when the patient isn't&nbsp;you.</h2>
-          <p className="lp-display mt-5 text-[1.375rem] leading-snug font-semibold text-[color:var(--ink)]">
-            A child. An aging parent. A spouse. Someone you help care for.
-          </p>
-          <p className={`${body} mt-4`}>
-            Now you're remembering someone else's medications, symptoms, appointments and history. Health Me keeps each
-            person's story separate, so when a healthcare professional asks{" "}
-            <span className="lp-serif italic text-[1.1875rem] text-[color:var(--ink)]">&ldquo;Has this happened before?&rdquo;</span>{" "}
-            you don't have to rely entirely on memory.
+      <div className={container}>
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6 lg:gap-16 items-end">
+          <div>
+            <Eyebrow>When you're speaking for someone else</Eyebrow>
+            <h2 id="family-title" className={`${H2} mt-3`}>It's even harder when the patient isn't&nbsp;you.</h2>
+          </div>
+          <p className={`${LEAD} lg:pb-1`}>
+            A child. An aging parent. A spouse. Health Me keeps each person's medications, symptoms and history separate,
+            so you don't have to rely entirely on memory.
           </p>
         </div>
+        <div className="mt-10 sm:mt-12"><CaregiverMock /></div>
       </div>
     </section>
   );
 }
 
-/* 10. Doctor communication */
+/* 11. Better appointment */
 function DoctorSection() {
   return (
     <section aria-labelledby="doctor-title" className={`${section} ${BG.sky}`}>
-      <div className={`${container} grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-12 lg:gap-20 items-center`}>
-        <div className="max-w-[540px]">
+      <div className={`${container} grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-12 lg:gap-16 items-center`}>
+        <div className="max-w-[520px]">
           <Eyebrow>Better context. Better conversations.</Eyebrow>
-          <h2 id="doctor-title" className={`${h2} mt-3`}>A better appointment starts before you walk into the&nbsp;office.</h2>
-          <p className={`${body} mt-6`}>
-            Instead of reconstructing weeks of health information from memory, walk in with the important pieces already
-            organized. Download a visit summary to bring with you, or share records through a link that expires on the
-            date you choose.
+          <h2 id="doctor-title" className={`${H2} mt-3`}>A better appointment starts before you walk into the&nbsp;office.</h2>
+          <p className={`${LEAD} mt-6`}>
+            Walk in with the important pieces already organized. Download your brief as a PDF, or share records through a
+            link that expires on the date you choose.
           </p>
+          <div className="mt-8 space-y-3 border-l-[3px] border-[color:var(--brand)] pl-5">
+            <p className="lp-display text-[1.375rem] sm:text-[1.5rem] leading-snug font-bold tracking-[-0.02em]">Your doctor brings the medical expertise.</p>
+            <p className="lp-display text-[1.375rem] sm:text-[1.5rem] leading-snug font-bold tracking-[-0.02em] text-[color:var(--brand)]">You bring a better picture of what you've been experiencing.</p>
+          </div>
         </div>
         <div className="flex lg:justify-end"><ReadyForVisit /></div>
-      </div>
-      <div className={`${container} mt-14 sm:mt-20`}>
-        <div className="grid sm:grid-cols-2 rounded-[28px] overflow-hidden shadow-[0_0_0_1px_var(--line)]">
-          <p className="bg-white p-7 sm:p-10 lp-display text-[1.625rem] sm:text-[2.125rem] leading-[1.15] font-bold tracking-[-0.035em]">
-            Your doctor brings the medical expertise.
-          </p>
-          <p className="bg-[color:var(--brand)] text-white p-7 sm:p-10 lp-display text-[1.625rem] sm:text-[2.125rem] leading-[1.15] font-bold tracking-[-0.035em]">
-            You bring a better picture of what you've been experiencing.
-          </p>
-        </div>
       </div>
     </section>
   );
@@ -427,8 +404,8 @@ function FaqSection() {
     <section id="faq" aria-labelledby="faq-title" className={`py-12 sm:py-16 ${BG.white}`}>
       <div className={`${container} grid grid-cols-1 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] gap-6 lg:gap-16`}>
         <div>
-          <h2 id="faq-title" className="lp-display font-bold text-[1.75rem] sm:text-[2.25rem] leading-tight tracking-[-0.035em]">Questions</h2>
-          <p className="mt-4 hidden lg:flex gap-2.5 text-[0.9375rem] leading-snug text-[color:var(--ink-2)]">
+          <h2 id="faq-title" className={H2}>Questions</h2>
+          <p className="mt-5 hidden lg:flex gap-2.5 text-[1rem] leading-snug text-[color:var(--ink-2)]">
             <Phone className="w-4 h-4 mt-0.5 text-[color:var(--urgent)] shrink-0" aria-hidden="true" />
             For life-threatening symptoms or emergencies, call 911 or your local emergency services.
           </p>
@@ -440,11 +417,11 @@ function FaqSection() {
               className="lp-faq rounded-2xl bg-[color:var(--paper)] px-5"
               onToggle={(e) => e.currentTarget.open && track("landing_faq_open", { question: f.q })}
             >
-              <summary className="flex items-center justify-between gap-6 py-3.5 min-h-[52px] text-[1.0625rem] font-semibold rounded-lg">
+              <summary className="flex items-center justify-between gap-6 py-4 min-h-[60px] text-[1.125rem] font-semibold rounded-lg">
                 {f.q}
                 <Plus className="lp-faq-icon w-5 h-5 shrink-0 text-[color:var(--brand)] transition-transform" aria-hidden="true" />
               </summary>
-              <p className="pb-5 -mt-1 pr-8 text-[1rem] leading-relaxed text-[color:var(--ink-2)]">{f.a}</p>
+              <p className="pb-5 -mt-1 pr-8 text-[1.0625rem] leading-relaxed text-[color:var(--ink-2)]">{f.a}</p>
             </details>
           ))}
           <p className="lg:hidden pt-3 flex gap-2.5 text-[0.9375rem] leading-snug text-[color:var(--ink-2)]">
@@ -457,21 +434,18 @@ function FaqSection() {
   );
 }
 
-/* 11. Final CTA */
+/* 13. Final CTA */
 function FinalCta({ ctaRef }) {
   return (
     <section aria-labelledby="final-title" className="lp-dark relative overflow-hidden bg-[color:var(--brand)] text-white">
-      <div className={`${container} relative py-20 sm:py-28 text-center`}>
+      <div className={`${container} relative py-24 sm:py-32 text-center`}>
         <Eyebrow dark className="!text-sky-200">The next appointment is too important to wing it.</Eyebrow>
-        <h2 id="final-title" className="lp-display mt-4 mx-auto max-w-[1000px] font-extrabold text-[3rem] leading-[0.96] sm:text-[4.75rem] lg:text-[5.75rem] tracking-[-0.05em]">
+        <h2 id="final-title" className="lp-display mt-5 mx-auto max-w-[1040px] font-extrabold text-[3rem] leading-[0.96] sm:text-[4.75rem] lg:text-[6rem] tracking-[-0.05em]">
           Walk in knowing what you need to&nbsp;say.
         </h2>
-        <p className="mt-6 mx-auto max-w-[560px] text-lg sm:text-[1.25rem] leading-relaxed text-white/85">
-          A better conversation, without trying to remember everything on the spot.
-        </p>
-        <div ref={ctaRef} className="mt-9 flex flex-col items-center gap-4">
+        <div ref={ctaRef} className="mt-10 flex flex-col items-center gap-5">
           <Cta src="final" size="lp-btn--lg lp-btn--xl lp-btn--light" />
-          <p className="text-[0.9375rem] text-white/80">Capture what's happening now. Bring the whole story later.</p>
+          <p className="text-[1.0625rem] leading-snug text-white/85">Capture what's happening now.<br />Bring the whole story later.</p>
         </div>
       </div>
     </section>
@@ -537,7 +511,7 @@ export default function Landing() {
   const finalCta = useRef(null);
 
   useEffect(() => {
-    document.title = "Health Me | Bring the Whole Story to Your Next Doctor Visit";
+    document.title = "Health Me | Your Health Happens Between Appointments";
     const params = new URLSearchParams(window.location.search);
     track("landing_view", {
       referrer: document.referrer || null,
@@ -555,6 +529,7 @@ export default function Landing() {
       <main id="main">
         <Hero ctaRef={heroCta} />
         <ProblemSection />
+        <RoomSection />
         <TimelineSection />
         <BeforeAfterSection />
         <PrepSection />
