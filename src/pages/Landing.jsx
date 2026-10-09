@@ -98,20 +98,22 @@ function Chips({ items, className = "" }) {
 function Hero({ ctaRef }) {
   return (
     <section aria-labelledby="hero-title" className={`relative overflow-hidden ${BG.paper}`}>
-      <div className={`${container} relative grid grid-cols-1 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)] gap-12 lg:gap-6 items-center pt-6 sm:pt-12 lg:pt-2 pb-14 sm:pb-20 lg:pb-10 lg:min-h-[calc(100svh-64px)] lg:max-h-[860px]`}>
+      <div className={`${container} relative grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)] gap-12 lg:gap-6 items-center pt-6 sm:pt-12 lg:pt-2 pb-14 sm:pb-20 lg:pb-10 lg:min-h-[calc(100svh-64px)] lg:max-h-[860px]`}>
         <div>
           <Eyebrow>Better prepared for your next appointment</Eyebrow>
-          <h1 id="hero-title" className="lp-display mt-3 max-w-[640px] font-extrabold text-[2.875rem] leading-[0.98] sm:text-[4.25rem] lg:text-[4.25rem] xl:text-[4.625rem] tracking-[-0.05em]">
-            Your doctor only knows what makes it <span className="text-[color:var(--brand)]">into the&nbsp;room.</span>
+          <h1 id="hero-title" className="lp-display mt-3 font-extrabold text-[3.125rem] leading-[0.96] sm:text-[4.5rem] lg:text-[3.875rem] xl:text-[5rem] tracking-[-0.05em]">
+            <span className="lg:block lg:whitespace-nowrap">Your doctor only </span>
+            <span className="lg:block lg:whitespace-nowrap">knows what makes it </span>
+            <span className="lg:block lg:whitespace-nowrap text-[color:var(--brand)]">into the&nbsp;room.</span>
           </h1>
-          <ul className="lp-serif italic mt-5 text-[1.1875rem] sm:text-[1.375rem] leading-[1.35] text-[color:var(--ink)]">
+          <ul className="lp-serif italic mt-4 text-[1.1875rem] sm:text-[1.375rem] leading-[1.35] text-[color:var(--ink)]">
             <li>Symptoms you forgot.</li>
             <li>Questions you meant to ask.</li>
             <li>Medication changes you didn't think mattered.</li>
           </ul>
           <p className="mt-4 max-w-[540px] text-[1.0625rem] sm:text-[1.125rem] leading-relaxed text-[color:var(--ink-2)]">
-            Health Me helps you capture what's happening between visits and organize it before your next appointment —
-            so you can walk in with a clearer picture of what has actually been going on.
+            Health Me helps you capture what happens between visits and organize it before your appointment, so you
+            walk in with the whole picture.
           </p>
           <div ref={ctaRef} className="mt-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
             <Cta src="hero" size="lp-btn--lg lp-btn--xl" className="w-full sm:w-auto" />
@@ -148,15 +150,14 @@ function ProblemSection() {
           <div className={`${body} mt-6 space-y-4`}>
             <p>
               You finally get in front of the doctor. They ask what's going on. You try to remember when it started, what
-              changed, which medication you're taking, whether that lab result came before or after.
+              changed, which medication you're taking.
             </p>
             <p>
-              Then the appointment is over. And twenty minutes later:
+              Then the appointment is over. Twenty minutes later:
               <em className="block mt-2 lp-serif text-[1.625rem] leading-tight text-[color:var(--ink)]">&ldquo;I forgot to tell them&hellip;&rdquo;</em>
             </p>
             <p>
-              <strong className="font-semibold text-[color:var(--ink)]">Health Me is designed to help prevent that.</strong>{" "}
-              Capture what's happening while it's happening, then walk in with a clearer story.
+              <strong className="font-semibold text-[color:var(--ink)]">Health Me is designed to help prevent that.</strong>
             </p>
           </div>
         </div>
@@ -295,7 +296,7 @@ function BrandStatement() {
   return (
     <section aria-labelledby="brand-title" className="lp-dark relative overflow-hidden bg-[color:var(--ink)] text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.5]" style={{ background: "radial-gradient(60% 80% at 85% 10%, rgba(14,165,233,0.22), transparent 60%)" }} />
-      <div className={`${container} relative py-24 sm:py-32`}>
+      <div className={`${container} relative pt-24 sm:pt-32 pb-28 sm:pb-40`}>
         <h2 id="brand-title" className="lp-display max-w-[1060px] font-bold text-[2.75rem] leading-[1.02] sm:text-[4rem] lg:text-[5.25rem] tracking-[-0.045em]">
           Don't replace your doctor. Bring them a better&#8209;prepared patient.
         </h2>
@@ -315,8 +316,8 @@ function BrandStatement() {
             </p>
           </div>
         </div>
-        <p className="lp-serif italic mt-16 sm:mt-24 text-[3.5rem] sm:text-[5.5rem] lg:text-[7.5rem] leading-[0.95] tracking-[-0.02em] text-sky-300">
-          Bring the whole story.
+        <p className="lp-serif italic mt-20 sm:mt-32 text-[4rem] sm:text-[6.5rem] lg:text-[8.5rem] xl:text-[9.5rem] leading-[0.9] tracking-[-0.025em] text-sky-300 [text-wrap:balance]">
+          <span className="sm:block">Bring the </span><span className="sm:block">whole story.</span>
         </p>
       </div>
     </section>
@@ -423,7 +424,7 @@ const FAQ = [
 
 function FaqSection() {
   return (
-    <section id="faq" aria-labelledby="faq-title" className={`py-14 sm:py-20 ${BG.white}`}>
+    <section id="faq" aria-labelledby="faq-title" className={`py-12 sm:py-16 ${BG.white}`}>
       <div className={`${container} grid grid-cols-1 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] gap-6 lg:gap-16`}>
         <div>
           <h2 id="faq-title" className="lp-display font-bold text-[1.75rem] sm:text-[2.25rem] leading-tight tracking-[-0.035em]">Questions</h2>
@@ -439,7 +440,7 @@ function FaqSection() {
               className="lp-faq rounded-2xl bg-[color:var(--paper)] px-5"
               onToggle={(e) => e.currentTarget.open && track("landing_faq_open", { question: f.q })}
             >
-              <summary className="flex items-center justify-between gap-6 py-4 min-h-[56px] text-[1.0625rem] font-semibold rounded-lg">
+              <summary className="flex items-center justify-between gap-6 py-3.5 min-h-[52px] text-[1.0625rem] font-semibold rounded-lg">
                 {f.q}
                 <Plus className="lp-faq-icon w-5 h-5 shrink-0 text-[color:var(--brand)] transition-transform" aria-hidden="true" />
               </summary>
@@ -462,15 +463,14 @@ function FinalCta({ ctaRef }) {
     <section aria-labelledby="final-title" className="lp-dark relative overflow-hidden bg-[color:var(--brand)] text-white">
       <div className={`${container} relative py-20 sm:py-28 text-center`}>
         <Eyebrow dark className="!text-sky-200">The next appointment is too important to wing it.</Eyebrow>
-        <h2 id="final-title" className="lp-display mt-4 mx-auto max-w-[900px] font-bold text-[2.75rem] leading-[1] sm:text-[4rem] lg:text-[4.75rem] tracking-[-0.045em]">
+        <h2 id="final-title" className="lp-display mt-4 mx-auto max-w-[1000px] font-extrabold text-[3rem] leading-[0.96] sm:text-[4.75rem] lg:text-[5.75rem] tracking-[-0.05em]">
           Walk in knowing what you need to&nbsp;say.
         </h2>
         <p className="mt-6 mx-auto max-w-[560px] text-lg sm:text-[1.25rem] leading-relaxed text-white/85">
-          You can have a better conversation when you're not trying to remember everything on the spot. Health Me helps
-          you prepare.
+          A better conversation, without trying to remember everything on the spot.
         </p>
         <div ref={ctaRef} className="mt-9 flex flex-col items-center gap-4">
-          <Cta src="final" size="lp-btn--lg lp-btn--light" />
+          <Cta src="final" size="lp-btn--lg lp-btn--xl lp-btn--light" />
           <p className="text-[0.9375rem] text-white/80">Capture what's happening now. Bring the whole story later.</p>
         </div>
       </div>

@@ -115,7 +115,7 @@ function MiniTimeline() {
 
 export function HeroPrep() {
   return (
-    <div className="relative w-full max-w-[390px] mx-auto lg:mr-0">
+    <div className="relative w-full max-w-[368px] mx-auto lg:mr-0">
       {/* Before: the note on your phone, tucked behind the card's left edge */}
       <div aria-hidden="true" className="lp-scrap hidden xl:block absolute right-[calc(100%-22px)] top-[190px] w-[188px] -rotate-[5deg] rounded-2xl px-4 pt-3.5 pb-5">
         <p className="text-[0.625rem] font-semibold uppercase tracking-wider text-[#8a7f6a]">Before · phone notes</p>
@@ -256,21 +256,27 @@ const DAYS = [
 
 export function WholeWeek() {
   return (
-    <figure className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_236px] gap-3 xl:gap-4" aria-label="Eight days of health events, then one Tuesday appointment">
-      <div className="lp-card overflow-hidden">
+    <figure className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_256px] gap-8 xl:gap-6" aria-label="Eight days of health events, then one Tuesday appointment">
+      <div className="lp-card overflow-hidden flex flex-col">
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 sm:px-7 py-4 border-b border-[color:var(--line)]">
           <p className="flex items-center gap-2.5 font-semibold">
             <Mark className="w-7 h-7" /> Jordan's health timeline
           </p>
           <p className="text-[0.9375rem] font-semibold text-[color:var(--brand)]">What you lived · Monday through Monday</p>
         </div>
-        <ol className="relative grid grid-cols-1 xl:grid-cols-6 px-5 sm:px-7 pt-5 xl:pt-8 pb-6 xl:pb-9">
-          <span aria-hidden="true" className="hidden xl:block absolute left-12 right-7 top-[64px] h-[3px] rounded-full bg-[color:var(--sky-wash)]" />
+        <ol className="relative flex-1 content-center grid grid-cols-1 xl:grid-cols-6 px-5 sm:px-7 pt-5 xl:pt-8 pb-6 xl:pb-9">
           <span aria-hidden="true" className="xl:hidden absolute left-[45px] top-8 bottom-8 w-[3px] rounded-full bg-[color:var(--sky-wash)]" />
-          {DAYS.map((e) => {
+          {DAYS.map((e, i) => {
             const k = KINDS[e.kind];
+            const last = i === DAYS.length - 1;
             return (
               <li key={e.date} className="relative flex xl:flex-col items-start gap-4 xl:gap-0 py-2.5 xl:py-0 xl:pr-3">
+                {/* Connector to the next event; darkens toward the appointment */}
+                <span
+                  aria-hidden="true"
+                  className={`hidden xl:block absolute left-16 top-[31px] h-[3px] bg-[color:var(--brand)] ${last ? "-right-7" : "right-0"}`}
+                  style={{ opacity: 0.2 + i * 0.16 }}
+                />
                 <span className={`relative z-10 grid place-items-center w-12 h-12 xl:w-16 xl:h-16 rounded-2xl shrink-0 ring-[6px] ring-white ${k.tint}`}>
                   <k.icon className="w-5 h-5 xl:w-7 xl:h-7" aria-hidden="true" />
                 </span>
@@ -287,15 +293,19 @@ export function WholeWeek() {
         </ol>
       </div>
 
-      <div className="rounded-[24px] bg-[color:var(--ink)] text-white p-6 xl:p-7 flex flex-col shadow-[0_24px_48px_-20px_rgba(15,30,44,0.55)]">
-        <p className="text-[0.9375rem] font-semibold text-sky-300">What the doctor sees</p>
+      <div className="relative rounded-[28px] bg-[color:var(--ink)] text-white p-6 xl:p-7 flex flex-col ring-4 ring-[color:var(--brand)] shadow-[0_30px_60px_-20px_rgba(3,105,161,0.55)]">
+        <span aria-hidden="true" className="absolute z-10 left-1/2 -top-5 -translate-x-1/2 xl:left-0 xl:top-[143px] grid place-items-center w-10 h-10 rounded-full bg-[color:var(--brand)] text-white ring-4 ring-[color:var(--sky-band)]">
+          <ArrowRight className="w-5 h-5 rotate-90 xl:rotate-0" />
+        </span>
+        <p className="inline-flex self-start items-center gap-1.5 rounded-full bg-sky-400/15 px-3 py-1 text-[0.8125rem] font-bold uppercase tracking-[0.08em] text-sky-300">The appointment</p>
+        <p className="mt-3 text-[0.9375rem] font-semibold text-white/80">What the doctor sees</p>
         <div className="flex xl:flex-col items-start gap-4 xl:gap-0 mt-5 xl:mt-auto">
-          <span className="grid place-items-center w-12 h-12 xl:w-16 xl:h-16 rounded-2xl bg-white text-[color:var(--ink)] shrink-0">
-            <Stethoscope className="w-5 h-5 xl:w-7 xl:h-7" aria-hidden="true" />
+          <span className="grid place-items-center w-14 h-14 xl:w-20 xl:h-20 rounded-2xl bg-white text-[color:var(--ink)] shrink-0">
+            <Stethoscope className="w-6 h-6 xl:w-9 xl:h-9" aria-hidden="true" />
           </span>
           <div className="xl:mt-5">
             <p className="text-[0.75rem] xl:text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-white/70">Next Tuesday <span className="xl:block font-medium normal-case tracking-normal"><span className="xl:hidden">· </span>Oct 13</span></p>
-            <p className="lp-display mt-1 text-[1.375rem] xl:text-[1.625rem] leading-[1.1] font-bold tracking-[-0.025em]">Doctor appointment</p>
+            <p className="lp-display mt-1 text-[1.5rem] xl:text-[1.875rem] leading-[1.05] font-extrabold tracking-[-0.03em]">Doctor appointment</p>
             <p className="mt-1 text-[0.9375rem] text-white/70">Dr. Patel · 10:30 AM</p>
           </div>
         </div>
@@ -313,13 +323,22 @@ const SUMMARY = [
   ["Main concern", "Recurring dizziness and headaches"],
   ["Started", "Monday, October 5"],
   ["Pattern", "Mostly worse in evenings"],
-  ["Recent change", "Lisinopril raised from 10 to 20 mg on October 6"],
-  ["Vitals", "Four elevated blood pressure readings"],
+  ["Medication change", "Lisinopril raised from 10 to 20 mg on October 6"],
+  ["Recent vitals", "Four elevated blood pressure readings"],
 ];
 
 export function BetterContext() {
   return (
-    <figure aria-label="Example Health Me visit summary">
+    <figure aria-label="Example Health Me appointment brief">
+      <div className="flex flex-wrap items-end justify-between gap-3 pb-4">
+        <div>
+          <p className="lp-display text-[1.625rem] sm:text-[1.875rem] font-extrabold leading-none tracking-[-0.03em] text-white">Appointment brief</p>
+          <p className="mt-1.5 text-[0.875rem] text-white/60">Jordan Rivera · Dr. Patel · Tue, Oct 13</p>
+        </div>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 text-emerald-300 text-xs font-semibold px-2.5 py-1">
+          <Check className="w-3.5 h-3.5" aria-hidden="true" /> Ready
+        </span>
+      </div>
       <dl className="border-t border-white/15">
         {SUMMARY.map(([k, v]) => (
           <div key={k} className="grid grid-cols-[7.5rem_minmax(0,1fr)] sm:grid-cols-[10rem_minmax(0,1fr)] gap-3 py-3 border-b border-white/15">
@@ -329,7 +348,7 @@ export function BetterContext() {
         ))}
       </dl>
       <div className="mt-5 rounded-2xl bg-white p-4 sm:p-5">
-        <p className="text-[0.75rem] font-semibold uppercase tracking-wider text-[color:var(--brand)]">Question for the doctor</p>
+        <p className="text-[0.75rem] font-semibold uppercase tracking-wider text-[color:var(--brand)]">Questions to discuss</p>
         <p className="lp-serif mt-1 text-[1.25rem] sm:text-[1.375rem] leading-snug text-[color:var(--ink)]">Could this relate to the medication change?</p>
       </div>
     </figure>
@@ -413,7 +432,7 @@ export function IntakeFlow() {
         </div>
         <span className="hidden lg:block" />
         <div className="hidden lg:flex items-center justify-between gap-3 self-end rounded-t-[24px] bg-[color:var(--ink)] text-white px-6 py-4">
-          <p className="flex items-center gap-2.5 font-semibold"><Mark className="w-6 h-6" /> Jordan's visit brief</p>
+          <p className="flex items-center gap-2.5 font-semibold"><Mark className="w-6 h-6" /> Jordan's appointment brief</p>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 text-emerald-300 text-xs font-semibold px-2.5 py-1">
             <Check className="w-3.5 h-3.5" aria-hidden="true" /> 5 of 5 complete
           </span>
@@ -425,11 +444,11 @@ export function IntakeFlow() {
           return (
             <React.Fragment key={title}>
               <div className="relative flex gap-4 lg:py-5">
-                {!last && <span aria-hidden="true" className="hidden lg:block absolute left-[19px] top-[68px] -bottom-5 w-[2px] bg-[#d9d3c8]" />}
-                <span className={`lp-display grid place-items-center w-10 h-10 rounded-full text-[1rem] font-bold shrink-0 ${k.tint}`}>{i + 1}</span>
+                {!last && <span aria-hidden="true" className="hidden lg:block absolute left-[21px] top-[72px] -bottom-5 w-[2px] bg-[#cfc8bb]" />}
+                <span className={`lp-display grid place-items-center w-11 h-11 rounded-full text-[1.0625rem] font-extrabold shrink-0 ${k.tint}`}>{i + 1}</span>
                 <div className="min-w-0 pt-1">
-                  <h3 className="lp-display text-[1.375rem] font-bold leading-tight tracking-[-0.025em]">{title}</h3>
-                  <ul className="mt-1.5 text-[0.9375rem] leading-snug text-[color:var(--ink-2)] space-y-0.5">
+                  <h3 className="lp-display text-[1.5rem] sm:text-[1.625rem] font-extrabold leading-tight tracking-[-0.03em]">{title}</h3>
+                  <ul className="mt-2 text-[1.0625rem] leading-snug font-medium text-[color:var(--ink-2)] space-y-1">
                     {prompts.map((p) => <li key={p}>{p}</li>)}
                   </ul>
                 </div>
@@ -442,10 +461,10 @@ export function IntakeFlow() {
                   last ? "lg:rounded-b-[24px] lg:shadow-[0_24px_48px_-24px_rgba(15,30,44,0.3)]" : ""
                 }`}
               >
-                <p className={`flex items-center gap-2 text-[0.75rem] font-bold uppercase tracking-[0.08em] ${k.tint.split(" ").find((c) => c.startsWith("text-"))}`}>
+                <p className={`flex items-center gap-2 text-[0.8125rem] font-bold uppercase tracking-[0.08em] ${k.tint.split(" ").find((c) => c.startsWith("text-"))}`}>
                   <k.icon className="w-4 h-4" aria-hidden="true" /> {title}
                 </p>
-                <p className="lp-serif mt-1.5 text-[1.125rem] sm:text-[1.1875rem] leading-snug text-[color:var(--ink)]">{note}</p>
+                <p className="lp-serif mt-1.5 text-[1.1875rem] sm:text-[1.3125rem] leading-snug text-[color:var(--ink)]">{note}</p>
               </div>
             </React.Fragment>
           );
@@ -459,15 +478,15 @@ export function IntakeFlow() {
 
 const SIGNALS = [
   [Activity, "Symptoms", "2 logged this week", "symptom"],
-  [CircleHelp, "Questions", "2 saved for the visit", "question"],
-  [Pill, "Medications", "3 current · 1 changed", "med"],
+  [Pill, "Medications", "3 current", "med"],
+  [FolderOpen, "Records", "Uploaded documents", "lab"],
   [FlaskConical, "Labs", "Cholesterol panel, March", "lab"],
   [HeartPulse, "Vitals", "24 blood pressure readings", "vital"],
-  [LineChart, "Health trends", "Evening readings rising", "med"],
-  [FolderOpen, "Records", "Uploaded documents", "lab"],
-  [Users, "Family & caregiver context", "A separate brief for each person", "better"],
+  [CircleHelp, "Questions", "2 saved for the visit", "question"],
+  [LineChart, "Recent changes", "Dose raised on Oct 6", "med"],
+  [Users, "Health history", "High blood pressure since 2021", "better"],
 ];
-const ROW = 56, GAP = 8;
+const ROW = 50, GAP = 8;
 const RAIL_H = SIGNALS.length * ROW + (SIGNALS.length - 1) * GAP;
 
 function BriefRow({ title, children, className = "" }) {
@@ -481,12 +500,12 @@ function BriefRow({ title, children, className = "" }) {
 
 export function SignalsToBrief() {
   return (
-    <figure className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] gap-0 items-center" aria-label="Eight kinds of health information combined into one appointment brief">
+    <figure className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.66fr)_minmax(0,1.2fr)] gap-0 items-center" aria-label="Eight kinds of health information combined into one appointment brief">
       <div className="flex items-center">
         <ul className="flex-1 min-w-0 grid grid-cols-2 lg:grid-cols-1 gap-2">
           {SIGNALS.map(([Icon, t, m, kind]) => (
-            <li key={t} className="flex items-center gap-3 rounded-xl bg-white px-3 py-2.5 lg:py-0 lg:h-14 shadow-[0_0_0_1px_var(--line)]">
-              <span className={`grid place-items-center w-9 h-9 rounded-lg shrink-0 ${KINDS[kind].tint}`}><Icon className="w-[18px] h-[18px]" aria-hidden="true" /></span>
+            <li key={t} className="flex items-center gap-3 rounded-xl bg-white/70 px-3 py-2.5 lg:py-0 lg:h-[50px] shadow-[0_0_0_1px_var(--line)]">
+              <span className={`grid place-items-center w-8 h-8 rounded-lg shrink-0 ${KINDS[kind].tint}`}><Icon className="w-4 h-4" aria-hidden="true" /></span>
               <span className="min-w-0">
                 <span className="block text-[0.9375rem] font-semibold leading-tight">{t}</span>
                 <span className="block text-[0.8125rem] text-[color:var(--muted)] leading-snug lg:truncate">{m}</span>
@@ -495,30 +514,30 @@ export function SignalsToBrief() {
           ))}
         </ul>
         {/* Every signal converges on the brief */}
-        <svg aria-hidden="true" viewBox={`0 0 80 ${RAIL_H}`} className="hidden lg:block w-20 shrink-0" style={{ height: RAIL_H }}>
+        <svg aria-hidden="true" viewBox={`0 0 64 ${RAIL_H}`} className="hidden lg:block w-16 shrink-0" style={{ height: RAIL_H }}>
           {SIGNALS.map((_, i) => {
             const y = ROW / 2 + i * (ROW + GAP);
-            return <path key={i} d={`M0 ${y} C40 ${y} 40 ${RAIL_H / 2} 80 ${RAIL_H / 2}`} fill="none" stroke="#b9d3e6" strokeWidth="2" />;
+            return <path key={i} d={`M0 ${y} C32 ${y} 32 ${RAIL_H / 2} 64 ${RAIL_H / 2}`} fill="none" stroke="#b9d3e6" strokeWidth="2" />;
           })}
-          <circle cx="76" cy={RAIL_H / 2} r="4" fill="#0369a1" />
+          <circle cx="60" cy={RAIL_H / 2} r="4" fill="#0369a1" />
         </svg>
       </div>
       <div aria-hidden="true" className="lg:hidden flex justify-center py-4"><ArrowRight className="w-6 h-6 rotate-90 text-[color:var(--brand)]" /></div>
 
-      <div className="lp-card overflow-hidden">
-        <div className="flex items-center justify-between gap-3 px-5 sm:px-6 py-4 bg-[color:var(--ink)] text-white">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <Mark className="w-7 h-7 shrink-0" />
+      <div className="lp-card overflow-hidden ring-1 ring-[color:var(--brand)]/20 shadow-[0_40px_80px_-30px_rgba(3,105,161,0.45)]">
+        <div className="flex items-center justify-between gap-3 px-5 sm:px-7 py-5 bg-[color:var(--ink)] text-white">
+          <div className="flex items-center gap-3 min-w-0">
+            <Mark className="w-9 h-9 shrink-0" />
             <div className="min-w-0">
-              <p className="font-semibold leading-tight">Your next appointment brief</p>
-              <p className="text-[0.8125rem] text-white/70 truncate">Jordan Rivera · Dr. Patel · Tue, Oct 13</p>
+              <p className="lp-display text-[1.375rem] sm:text-[1.625rem] font-extrabold leading-none tracking-[-0.03em]">Appointment brief</p>
+              <p className="mt-1 text-[0.875rem] text-white/70 truncate">Jordan Rivera · Dr. Patel · Tue, Oct 13</p>
             </div>
           </div>
-          <ClipboardCheck className="w-5 h-5 text-emerald-300 shrink-0" aria-hidden="true" />
+          <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 text-emerald-300 text-xs font-semibold px-2.5 py-1"><ClipboardCheck className="w-3.5 h-3.5" aria-hidden="true" /> Ready</span>
         </div>
-        <div className="px-5 sm:px-6 pb-4">
-          <BriefRow title="Main concern" className="!border-0">
-            <p className="lp-display text-[1.25rem] font-bold tracking-[-0.02em]">Recurring dizziness and headaches</p>
+        <div className="px-5 sm:px-7 pb-5">
+          <BriefRow title="Main concern" className="!border-0 !pt-4">
+            <p className="lp-display text-[1.5rem] sm:text-[1.625rem] font-extrabold leading-tight tracking-[-0.03em]">Recurring dizziness and headaches</p>
           </BriefRow>
           <div className="grid grid-cols-2 gap-4 border-t border-[color:var(--line)] py-3 text-[0.9375rem] leading-snug">
             <div>
