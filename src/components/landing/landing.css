@@ -63,13 +63,6 @@ html:has(.lp) { scroll-behavior: smooth; }
     0 30px 50px -30px rgba(15, 30, 44, 0.35);
 }
 
-/* Highlighted facts inside the story card */
-.lp-hl { background: none; color: inherit; padding: 0 0.1em; border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
-.lp-hl--warn { background: var(--warn-bg); }
-.lp-hl--brand { background: var(--sky-wash); }
-.lp-hl--urgent { background: var(--urgent-bg); }
-.lp-hl--ok { background: var(--ok-bg); }
-
 /* Hero card settles in once */
 .lp-rise { animation: lp-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both; }
 @keyframes lp-rise {
@@ -118,31 +111,6 @@ html:has(.lp) { scroll-behavior: smooth; }
     0 2px 4px rgba(15, 30, 44, 0.04),
     0 24px 48px -20px rgba(15, 30, 44, 0.22);
 }
-
-/* Next-step strip: the page's signature element */
-.lp-next {
-  border-radius: 14px;
-  padding: 0.75rem 0.875rem;
-  font-size: 0.875rem;
-  line-height: 1.45;
-}
-.lp-next__label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  margin-bottom: 0.2rem;
-}
-.lp-next__dot { width: 7px; height: 7px; border-radius: 999px; background: currentColor; }
-.lp-next--home { background: var(--ok-bg); }
-.lp-next--home .lp-next__label { color: var(--ok); }
-.lp-next--doctor { background: var(--warn-bg); }
-.lp-next--doctor .lp-next__label { color: var(--warn); }
-.lp-next--er { background: var(--urgent-bg); }
-.lp-next--er .lp-next__label { color: var(--urgent); }
 
 /* Chat reveal: content is always laid out (no layout shift), only faded in */
 .lp-msg { transition: opacity 0.45s ease, transform 0.45s ease; }
